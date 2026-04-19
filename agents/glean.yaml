@@ -1,0 +1,28 @@
+# Glean Search Agent
+# Specialized agent for enterprise search and knowledge retrieval
+agent_id: "glean"
+display_name: "Enterprise Search"
+
+description: >-
+  An enterprise search agent that helps users find information across company
+  documents, wikis, drive files, and other knowledge bases. Use this agent
+  for questions that require searching internal documentation or finding
+  specific files and resources.
+
+endpoint: "${GLEAN_AGENT_ENDPOINT:-https://glean-agent.example.com}"
+type: mcp
+is_default: false
+confidence_threshold: 0.6
+clarification_required: false
+
+clarification_context: >-
+  I can help you search our company's knowledge bases, including documents,
+  wikis, and shared drives. What specifically are you looking for?
+
+examples:
+  - "Find the Q4 sales report"
+  - "Where is the employee handbook?"
+  - "Search for the project timeline document"
+  - "I need the API documentation for the payments service"
+  - "Find information about our vacation policy"
+  - "Where can I find the onboarding checklist?"

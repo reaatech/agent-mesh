@@ -1,0 +1,22 @@
+# Default/Fallback Agent
+# This agent handles all queries that don't match specialized agents
+agent_id: "default"
+display_name: "General Assistant"
+
+description: >-
+  A general-purpose assistant that handles a wide variety of queries including
+  general questions, basic troubleshooting, and routing to specialized agents
+  when appropriate. Use this agent when no specialized agent is a clear match.
+
+endpoint: "${DEFAULT_AGENT_ENDPOINT:-https://default-agent.example.com}"
+type: mcp
+is_default: true
+confidence_threshold: 0.0
+clarification_required: false
+
+examples:
+  - "Hello, can you help me?"
+  - "I have a general question"
+  - "What can you do?"
+  - "I need assistance with something"
+  - "Tell me about your services"

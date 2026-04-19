@@ -1,0 +1,29 @@
+# Serval IT Helpdesk Agent
+# Specialized agent for IT support and technical issues
+agent_id: "serval"
+display_name: "IT Helpdesk"
+
+description: >-
+  An IT helpdesk agent that assists with technical issues including password
+  resets, VPN connectivity, software installation, hardware problems, and
+  access requests. Use this agent for any IT-related support needs.
+
+endpoint: "${SERVAL_AGENT_ENDPOINT:-https://serval-agent.example.com}"
+type: mcp
+is_default: false
+confidence_threshold: 0.7
+clarification_required: true
+
+clarification_context: >-
+  I can help with IT issues like password resets, VPN problems, software
+  installation, and access requests. What technical issue are you experiencing?
+
+examples:
+  - "I forgot my password, need to reset it"
+  - "My VPN keeps disconnecting"
+  - "I need access to the marketing shared drive"
+  - "How do I install the company VPN client?"
+  - "My laptop screen is flickering"
+  - "I can't connect to the corporate WiFi"
+  - "Need to request a new monitor"
+  - "How do I set up two-factor authentication?"
