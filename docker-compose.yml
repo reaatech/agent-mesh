@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  # Main orchestrator service
+  orchestrator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - GOOGLE_CLOUD_PROJECT=local-dev
+      - FIRESTORE_EMULATOR_HOST=firestore-emulator:8040
+      - PUBSUB_EMULATOR_HOST=pubsub-emulator:8030
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      - LOG_LEVEL=debug
+      - API_KEY=dev-api-key
+      - SECRET_MANAGER_PROJECT=local-dev
+    depends_on:
+      - firestore-emulator
+      - pubsub-emulator
+      - otel-collector
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # Firestore emulator
+  firestore-emulator:
+    image: google/cloud-sdk:latest
+    command: >
+      gcloud beta emulators firestore start
+      --host-port=0.0.0.0:8040
+      --project=local-dev
+    ports:
+      - "8040:8040"
+    environment:
+      - FIRESTORE_PROJECT_ID=local-dev
+
+  # Pub/Sub emulator
+  pubsub-emulator:
+    image: google/cloud-sdk:latest
+    command: >
+      gcloud beta emulators pubsub start
+      --host-port=0.0.0.0:8030
+      --project=local-dev
+    ports:
+      - "8030:8030"
+    environment:
+      - PUBSUB_PROJECT_ID=local-dev
+
+  # OpenTelemetry Collector
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    ports:
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
+      - "8889:8889"   # Prometheus metrics
+    volumes:
+      - ./docker/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    command: ["--config=/etc/otel-collector-config.yaml"]
+
+  # Jaeger for tracing
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"  # Jaeger UI
+      - "4317:4317"    # OTLP gRPC (alternative)
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+
+  # Sample agent (for testing)
+  sample-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - GOOGLE_CLOUD_PROJECT=local-dev
+      - FIRESTORE_EMULATOR_HOST=firestore-emulator:8040
+      - LOG_LEVEL=debug
+    command: ["node", "dist/index.js"]
+    depends_on:
+      - firestore-emulator
