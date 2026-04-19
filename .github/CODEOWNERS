@@ -1,0 +1,23 @@
+# Code owners for agent-mesh
+# Format: path/to/files @owner
+
+# Default owners
+* @agent-mesh-maintainers
+
+# Core source code
+src/ @agent-mesh-maintainers
+
+# Tests
+tests/ @agent-mesh-maintainers
+
+# Infrastructure
+infra/ @agent-mesh-maintainers
+Dockerfile @agent-mesh-maintainers
+docker-compose.yml @agent-mesh-maintainers
+
+# Configuration
+package.json @agent-mesh-maintainers
+tsconfig.json @agent-mesh-maintainers
+
+# Documentation
+*.md @agent-mesh-maintainers
