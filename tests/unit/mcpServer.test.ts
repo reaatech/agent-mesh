@@ -73,9 +73,7 @@ describe('handleMcpRequest', () => {
     expect(res.json).toHaveBeenCalledWith(
       expect.objectContaining({
         result: expect.objectContaining({
-          tools: expect.arrayContaining([
-            expect.objectContaining({ name: 'handle_message' }),
-          ]),
+          tools: expect.arrayContaining([expect.objectContaining({ name: 'handle_message' })]),
         }),
       }),
     );
@@ -187,9 +185,7 @@ describe('handleMcpRequest', () => {
       expect.objectContaining({
         result: expect.objectContaining({
           structuredContent: expect.objectContaining({
-            agents: expect.arrayContaining([
-              expect.objectContaining({ agent_id: 'default' }),
-            ]),
+            agents: expect.arrayContaining([expect.objectContaining({ agent_id: 'default' })]),
           }),
         }),
       }),

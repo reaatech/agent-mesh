@@ -1,7 +1,7 @@
 /**
  * Circuit Breaker Unit Tests
  * Test state transitions, exponential backoff, and half-open behavior
- * 
+ *
  * Note: Tests the circuit breaker logic directly without importing
  * the singleton to avoid env validation during tests.
  */

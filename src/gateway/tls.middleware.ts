@@ -83,19 +83,13 @@ function securityHeaders(_req: Request, res: Response, next: NextFunction): void
   res.set('X-XSS-Protection', '1; mode=block');
 
   // Content Security Policy - restrict resource loading
-  res.set(
-    'Content-Security-Policy',
-    "default-src 'none'; frame-ancestors 'none'"
-  );
+  res.set('Content-Security-Policy', "default-src 'none'; frame-ancestors 'none'");
 
   // Referrer Policy
   res.set('Referrer-Policy', 'strict-origin-when-cross-origin');
 
   // Permissions Policy - disable unnecessary features
-  res.set(
-    'Permissions-Policy',
-    'camera=(), microphone=(), geolocation=(), payment=()'
-  );
+  res.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
 
   next();
 }

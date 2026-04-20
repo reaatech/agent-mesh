@@ -68,10 +68,7 @@ describe('Registry Contract', () => {
     });
 
     it('should reject confidence_threshold > 1 or < 0', () => {
-      const configs = [
-        { confidence_threshold: 1.5 },
-        { confidence_threshold: -0.1 },
-      ];
+      const configs = [{ confidence_threshold: 1.5 }, { confidence_threshold: -0.1 }];
 
       for (const override of configs) {
         const config = {
@@ -91,33 +88,37 @@ describe('Registry Contract', () => {
     });
 
     it('should require default agent to have threshold 0 (registry level)', () => {
-      const registry = [{
-        agent_id: 'default-agent',
-        display_name: 'Default Agent',
-        description: 'The default agent',
-        endpoint: 'https://default.example.com',
-        type: 'mcp' as const,
-        is_default: true,
-        confidence_threshold: 0.5,
-        clarification_required: false,
-        examples: ['Test query'],
-      }];
+      const registry = [
+        {
+          agent_id: 'default-agent',
+          display_name: 'Default Agent',
+          description: 'The default agent',
+          endpoint: 'https://default.example.com',
+          type: 'mcp' as const,
+          is_default: true,
+          confidence_threshold: 0.5,
+          clarification_required: false,
+          examples: ['Test query'],
+        },
+      ];
 
       expect(() => AgentRegistrySchema.parse(registry)).toThrow();
     });
 
     it('should accept default agent with threshold 0 (registry level)', () => {
-      const registry = [{
-        agent_id: 'default-agent',
-        display_name: 'Default Agent',
-        description: 'The default agent',
-        endpoint: 'https://default.example.com',
-        type: 'mcp' as const,
-        is_default: true,
-        confidence_threshold: 0,
-        clarification_required: false,
-        examples: ['Test query'],
-      }];
+      const registry = [
+        {
+          agent_id: 'default-agent',
+          display_name: 'Default Agent',
+          description: 'The default agent',
+          endpoint: 'https://default.example.com',
+          type: 'mcp' as const,
+          is_default: true,
+          confidence_threshold: 0,
+          clarification_required: false,
+          examples: ['Test query'],
+        },
+      ];
 
       const result = AgentRegistrySchema.parse(registry);
       const firstAgent = result[0];

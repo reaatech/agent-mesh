@@ -91,9 +91,8 @@ type DispatchOptions = {
   body?: unknown;
 };
 
-const { healthCheck, deepHealthCheck, handleRequest } = await import(
-  '../../src/gateway/entry.handler.js'
-);
+const { healthCheck, deepHealthCheck, handleRequest } =
+  await import('../../src/gateway/entry.handler.js');
 const { authMiddleware } = await import('../../src/gateway/auth.middleware.js');
 
 function createResponse(): Response & {

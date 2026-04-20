@@ -55,7 +55,9 @@ describe('McpClient', () => {
 
   it('parses structured response from content array', async () => {
     mockClientCallTool.mockResolvedValue({
-      content: [{ type: 'text', text: JSON.stringify({ content: 'hello', workflow_complete: true }) }],
+      content: [
+        { type: 'text', text: JSON.stringify({ content: 'hello', workflow_complete: true }) },
+      ],
     });
 
     const result = await client.sendMessage({
@@ -119,11 +121,9 @@ describe('McpClient', () => {
   });
 
   it('retries on failure', async () => {
-    mockClientCallTool
-      .mockRejectedValueOnce(new Error('transient'))
-      .mockResolvedValue({
-        structuredContent: { content: 'ok', workflow_complete: true },
-      });
+    mockClientCallTool.mockRejectedValueOnce(new Error('transient')).mockResolvedValue({
+      structuredContent: { content: 'ok', workflow_complete: true },
+    });
 
     const result = await client.sendMessage({
       session_id: 's1',

@@ -126,7 +126,10 @@ export class McpClient {
             },
           }),
           new Promise<never>((_, reject) =>
-            setTimeout(() => reject(new Error(`MCP request timeout after ${env.MCP_REQUEST_TIMEOUT_MS}ms`)), env.MCP_REQUEST_TIMEOUT_MS),
+            setTimeout(
+              () => reject(new Error(`MCP request timeout after ${env.MCP_REQUEST_TIMEOUT_MS}ms`)),
+              env.MCP_REQUEST_TIMEOUT_MS,
+            ),
           ),
         ])) as McpToolResult;
 
@@ -229,7 +232,7 @@ export class McpClient {
         } catch {
           // Best effort close
         }
-      })
+      }),
     );
     this.connectionPool = [];
     this.poolInitialized = false;

@@ -131,12 +131,13 @@ async function processMcpMethod(message: McpMessage): Promise<McpResponse> {
     }
 
     case 'list_agents': {
-      const agents = registryState.registry?.map((agent) => ({
-        agent_id: agent.agent_id,
-        display_name: agent.display_name,
-        is_default: agent.is_default,
-        confidence_threshold: agent.confidence_threshold,
-      })) ?? [];
+      const agents =
+        registryState.registry?.map((agent) => ({
+          agent_id: agent.agent_id,
+          display_name: agent.display_name,
+          is_default: agent.is_default,
+          confidence_threshold: agent.confidence_threshold,
+        })) ?? [];
 
       return {
         jsonrpc: '2.0',

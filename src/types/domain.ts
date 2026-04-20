@@ -94,12 +94,16 @@ export const ContextPacketSchema = z.object({
   intent_summary: z.string(),
   entities: z.record(z.string(), z.unknown()).default({}),
   detected_language: z.string(),
-  turn_history: z.array(z.object({
-    role: z.enum(['user', 'agent']),
-    content: z.string(),
-    timestamp: z.string().datetime(),
-    intent_summary: z.string().optional(),
-  })).default([]),
+  turn_history: z
+    .array(
+      z.object({
+        role: z.enum(['user', 'agent']),
+        content: z.string(),
+        timestamp: z.string().datetime(),
+        intent_summary: z.string().optional(),
+      }),
+    )
+    .default([]),
   workflow_state: z.record(z.string(), z.unknown()).default({}),
 });
 
@@ -189,11 +193,16 @@ export const HealthStatusSchema = z.object({
   status: z.enum(['healthy', 'unhealthy', 'degraded']),
   version: z.string(),
   uptime_ms: z.number(),
-  checks: z.record(z.string(), z.object({
-    status: z.enum(['pass', 'fail', 'warn']),
-    message: z.string().optional(),
-    latency_ms: z.number().optional(),
-  })).default({}),
+  checks: z
+    .record(
+      z.string(),
+      z.object({
+        status: z.enum(['pass', 'fail', 'warn']),
+        message: z.string().optional(),
+        latency_ms: z.number().optional(),
+      }),
+    )
+    .default({}),
 });
 
 export type HealthStatus = z.infer<typeof HealthStatusSchema>;

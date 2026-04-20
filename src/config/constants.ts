@@ -40,29 +40,74 @@ export const RATE_LIMIT_HEADERS = {
 
 /** SSRF protection: private IP ranges to reject */
 export const PRIVATE_IP_RANGES = [
-  /^127\..*/,           // Loopback
-  /^10\..*/,            // Private Class A
-  /^172\.(1[6-9]|2\d|3[0-1])\..*/,  // Private Class B
-  /^192\.168\..*/,      // Private Class C
-  /^169\.254\..*/,      // Link-local
-  /^::1$/,              // IPv6 loopback
-  /^fc00:.*/i,          // IPv6 unique local
-  /^fe80:.*/i,          // IPv6 link-local
+  /^127\..*/, // Loopback
+  /^10\..*/, // Private Class A
+  /^172\.(1[6-9]|2\d|3[0-1])\..*/, // Private Class B
+  /^192\.168\..*/, // Private Class C
+  /^169\.254\..*/, // Link-local
+  /^::1$/, // IPv6 loopback
+  /^fc00:.*/i, // IPv6 unique local
+  /^fe80:.*/i, // IPv6 link-local
   /^localhost$/i,
   /^\[::1\]$/,
-  /^::ffff:/i,          // IPv4-mapped IPv6 (::ffff:192.168.1.1)
+  /^::ffff:/i, // IPv4-mapped IPv6 (::ffff:192.168.1.1)
 ] as const;
 
 /** Supported languages for clarification questions */
 export const SUPPORTED_LANGUAGES = [
-  'en', 'es', 'fr', 'de', 'it', 'pt', 'nl', 'pl', 'ru', 'ja',
-  'zh', 'ko', 'ar', 'hi', 'tr', 'vi', 'th', 'id', 'ms', 'tl',
-  'sv', 'no', 'da', 'fi', 'cs', 'hu', 'ro', 'uk', 'el', 'he',
-  'bn', 'ta', 'te', 'mr', 'ur', 'fa', 'sw', 'am', 'ne', 'si',
-  'my', 'km', 'lo', 'ka', 'hy', 'az', 'uz', 'kk', 'mn', 'bo',
+  'en',
+  'es',
+  'fr',
+  'de',
+  'it',
+  'pt',
+  'nl',
+  'pl',
+  'ru',
+  'ja',
+  'zh',
+  'ko',
+  'ar',
+  'hi',
+  'tr',
+  'vi',
+  'th',
+  'id',
+  'ms',
+  'tl',
+  'sv',
+  'no',
+  'da',
+  'fi',
+  'cs',
+  'hu',
+  'ro',
+  'uk',
+  'el',
+  'he',
+  'bn',
+  'ta',
+  'te',
+  'mr',
+  'ur',
+  'fa',
+  'sw',
+  'am',
+  'ne',
+  'si',
+  'my',
+  'km',
+  'lo',
+  'ka',
+  'hy',
+  'az',
+  'uz',
+  'kk',
+  'mn',
+  'bo',
 ] as const;
 
-export type SupportedLanguage = typeof SUPPORTED_LANGUAGES[number];
+export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
 /** Default language when detection fails */
 export const DEFAULT_LANGUAGE: SupportedLanguage = 'en';

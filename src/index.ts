@@ -15,7 +15,10 @@ import { rateLimiterMiddleware } from './gateway/rateLimiter.middleware.js';
 import { tlsMiddleware } from './gateway/tls.middleware.js';
 import { mcpMiddleware } from './mcp-server/mcpServer.js';
 import { messageHandler, sseHandler } from './mcp-server/orchestrator.mcp.js';
-import { startCircuitBreakerPersistence, stopCircuitBreakerPersistence } from './utils/circuitBreaker.persistence.js';
+import {
+  startCircuitBreakerPersistence,
+  stopCircuitBreakerPersistence,
+} from './utils/circuitBreaker.persistence.js';
 import { logger } from './observability/logger.js';
 
 async function main(): Promise<void> {
@@ -64,17 +67,24 @@ async function main(): Promise<void> {
   });
 
   // Error handler
-  app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-    logger.error('Unhandled error', { err, service: SERVICE_NAME });
-    res.status(500).json({
-      error: 'Internal server error',
-      message: env.NODE_ENV === 'development' ? err.message : 'An error occurred',
-    });
-  });
+  app.use(
+    (err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+      logger.error('Unhandled error', { err, service: SERVICE_NAME });
+      res.status(500).json({
+        error: 'Internal server error',
+        message: env.NODE_ENV === 'development' ? err.message : 'An error occurred',
+      });
+    },
+  );
 
   // Start server
   const server = app.listen(env.PORT, () => {
-    logger.info('Listening', { service: SERVICE_NAME, version: SERVICE_VERSION, port: env.PORT, nodeEnv: env.NODE_ENV });
+    logger.info('Listening', {
+      service: SERVICE_NAME,
+      version: SERVICE_VERSION,
+      port: env.PORT,
+      nodeEnv: env.NODE_ENV,
+    });
     logger.info(`Health: http://localhost:${env.PORT}/health`, { service: SERVICE_NAME });
     logger.info(`Deep health: http://localhost:${env.PORT}/health/deep`, { service: SERVICE_NAME });
     logger.info(`API: POST http://localhost:${env.PORT}/v1/request`, { service: SERVICE_NAME });

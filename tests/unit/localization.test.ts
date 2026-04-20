@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { detectLanguage, isValidLanguageCode, getClarificationQuestion, FALLBACK_QUESTIONS } from '../../src/classifier/localization.js';
+import {
+  detectLanguage,
+  isValidLanguageCode,
+  getClarificationQuestion,
+  FALLBACK_QUESTIONS,
+} from '../../src/classifier/localization.js';
 
 describe('detectLanguage', () => {
   it('returns "en" for English text', () => {

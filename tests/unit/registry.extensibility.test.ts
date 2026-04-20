@@ -15,9 +15,8 @@ vi.mock('../../src/classifier/classifier.service.js', () => ({
   },
 }));
 
-const { loadRegistry, registryState, reloadRegistry } = await import(
-  '../../src/registry/registry.loader.js'
-);
+const { loadRegistry, registryState, reloadRegistry } =
+  await import('../../src/registry/registry.loader.js');
 
 describe('Registry Extensibility Contract', () => {
   let tmpDir: string;

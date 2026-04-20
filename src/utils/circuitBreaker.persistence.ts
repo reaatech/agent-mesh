@@ -177,12 +177,15 @@ export async function persistCircuitBreakerState(state: CircuitBreakerState): Pr
           last_synced: Date.now(),
           synced_by: getOrCreateInstanceId(),
         },
-        { merge: true }
+        { merge: true },
       );
       return;
     } catch (_error) {
       const message = _error instanceof Error ? _error.message.toLowerCase() : '';
-      const retryable = message.includes('quota') || message.includes('deadline') || message.includes('unavailable');
+      const retryable =
+        message.includes('quota') ||
+        message.includes('deadline') ||
+        message.includes('unavailable');
 
       if (!retryable || attempt === 2) {
         return;
@@ -197,7 +200,9 @@ export async function persistCircuitBreakerState(state: CircuitBreakerState): Pr
 /**
  * Load circuit breaker state from Firestore
  */
-export async function loadCircuitBreakerState(agentId: string): Promise<CircuitBreakerState | null> {
+export async function loadCircuitBreakerState(
+  agentId: string,
+): Promise<CircuitBreakerState | null> {
   const firestore = getFirestore();
   const docRef = firestore.collection(CIRCUIT_BREAKERS_COLLECTION).doc(agentId);
 
@@ -274,7 +279,6 @@ async function syncStates(): Promise<void> {
     for (const state of localStates) {
       await persistCircuitBreakerState(state);
     }
-
   } catch {
     // Best effort sync
   }

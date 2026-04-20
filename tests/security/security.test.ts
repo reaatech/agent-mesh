@@ -93,9 +93,8 @@ type DispatchOptions = {
 
 const { healthCheck, handleRequest } = await import('../../src/gateway/entry.handler.js');
 const { authMiddleware } = await import('../../src/gateway/auth.middleware.js');
-const { rateLimiterMiddleware, clearRateLimitBuckets } = await import(
-  '../../src/gateway/rateLimiter.middleware.js'
-);
+const { rateLimiterMiddleware, clearRateLimitBuckets } =
+  await import('../../src/gateway/rateLimiter.middleware.js');
 
 function createResponse(): Response & {
   statusCode: number;
@@ -177,10 +176,7 @@ async function dispatch({
   const normalizedHeaders = normalizeHeaders(headers);
   const res = createResponse();
 
-  if (
-    normalizedHeaders['content-type'] === 'application/json' &&
-    typeof rawBody === 'string'
-  ) {
+  if (normalizedHeaders['content-type'] === 'application/json' && typeof rawBody === 'string') {
     try {
       JSON.parse(rawBody);
     } catch {

@@ -205,9 +205,8 @@ describe('Performance Tests', () => {
 
   describe('Rate limiter performance', () => {
     it('should handle rapid rate limit checks efficiently', async () => {
-      const { rateLimiterMiddleware, clearRateLimitBuckets } = await import(
-        '../../src/gateway/rateLimiter.middleware.js'
-      );
+      const { rateLimiterMiddleware, clearRateLimitBuckets } =
+        await import('../../src/gateway/rateLimiter.middleware.js');
 
       clearRateLimitBuckets();
 
@@ -242,9 +241,7 @@ describe('Performance Tests', () => {
   // These tests would be valuable in a properly configured environment
   describe.skip('Registry lookup performance', () => {
     it('should retrieve agents quickly from registry', async () => {
-      const { registryState, loadRegistry } = await import(
-        '../../src/registry/registry.loader.js'
-      );
+      const { registryState, loadRegistry } = await import('../../src/registry/registry.loader.js');
 
       // Load the default registry
       await loadRegistry();
@@ -265,9 +262,7 @@ describe('Performance Tests', () => {
 
   describe.skip('Confidence gate performance', () => {
     it('should evaluate confidence gate quickly', async () => {
-      const { evaluateConfidenceGate } = await import(
-        '../../src/confidence/confidence.gate.js'
-      );
+      const { evaluateConfidenceGate } = await import('../../src/confidence/confidence.gate.js');
       const { registryState, loadRegistry } = await import('../../src/registry/registry.loader.js');
 
       await loadRegistry();
@@ -342,4 +337,3 @@ describe('Performance Tests', () => {
     });
   });
 });
-

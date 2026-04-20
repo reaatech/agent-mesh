@@ -37,7 +37,7 @@ const ssrfSafeUrl = z.string().refine(
   (url) => isSsrfSafeUrl(url),
   (url) => ({
     message: `Endpoint URL is not allowed: ${url}. localhost and private IP ranges are rejected for SSRF protection.`,
-  })
+  }),
 );
 
 /**
@@ -113,21 +113,21 @@ export const AgentRegistrySchema = z
       const defaults = agents.filter((a) => a.is_default);
       return defaults.length === 1;
     },
-    { message: 'Exactly one agent must have is_default: true' }
+    { message: 'Exactly one agent must have is_default: true' },
   )
   .refine(
     (agents) => {
       const ids = agents.map((a) => a.agent_id);
       return ids.length === new Set(ids).size;
     },
-    { message: 'All agent_id values must be unique' }
+    { message: 'All agent_id values must be unique' },
   )
   .refine(
     (agents) => {
       const defaultAgent = agents.find((a) => a.is_default);
       return !defaultAgent || defaultAgent.confidence_threshold === 0;
     },
-    { message: 'Default agent must have confidence_threshold: 0' }
+    { message: 'Default agent must have confidence_threshold: 0' },
   );
 
 export type AgentRegistry = z.infer<typeof AgentRegistrySchema>;

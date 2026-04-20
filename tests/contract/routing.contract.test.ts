@@ -10,7 +10,7 @@ import type { ClassifierOutput } from '../../src/types/domain.js';
 // Simplified confidence gate logic for testing
 function evaluateRouting(
   classifierOutput: ClassifierOutput,
-  agents: AgentConfig[]
+  agents: AgentConfig[],
 ): { action: string; agent_id: string } {
   const defaultAgent = agents.find((a) => a.is_default);
   const matchedAgent = agents.find((a) => a.agent_id === classifierOutput.agent_id);

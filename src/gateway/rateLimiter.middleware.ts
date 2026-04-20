@@ -113,7 +113,10 @@ function refillBucket(bucket: TokenBucket, config: RateLimitConfig): TokenBucket
  * Try to consume a token from the bucket
  * Returns true if token was consumed, false if rate limited
  */
-function tryConsumeToken(clientId: string, config: RateLimitConfig): { allowed: boolean; bucket: TokenBucket } {
+function tryConsumeToken(
+  clientId: string,
+  config: RateLimitConfig,
+): { allowed: boolean; bucket: TokenBucket } {
   const now = Date.now();
   let bucket = buckets.get(clientId);
 

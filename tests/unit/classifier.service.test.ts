@@ -14,7 +14,8 @@ vi.mock('../../src/classifier/localization.js', () => ({
   detectLanguage: () => 'en',
 }));
 
-const { ClassifierService, isRateLimitError } = await import('../../src/classifier/classifier.service.js');
+const { ClassifierService, isRateLimitError } =
+  await import('../../src/classifier/classifier.service.js');
 
 const defaultAgent = {
   agent_id: 'default',

@@ -21,12 +21,15 @@ vi.mock('../../src/confidence/clarification.cache.js', () => {
   return {
     clarificationCache: {
       get: (key: string) => map.get(key) ?? null,
-      set: (key: string, value: string) => { map.set(key, value); },
+      set: (key: string, value: string) => {
+        map.set(key, value);
+      },
     },
   };
 });
 
-const { evaluateConfidenceGate, generateClarificationQuestion } = await import('../../src/confidence/confidence.gate.js');
+const { evaluateConfidenceGate, generateClarificationQuestion } =
+  await import('../../src/confidence/confidence.gate.js');
 
 const defaultAgent = {
   agent_id: 'default',
@@ -94,7 +97,10 @@ describe('evaluateConfidenceGate', () => {
   });
 
   it('Rule 2: default agent always routes directly', () => {
-    const result = evaluateConfidenceGate(makeOutput({ agent_id: 'default', confidence: 0.1 }), registry);
+    const result = evaluateConfidenceGate(
+      makeOutput({ agent_id: 'default', confidence: 0.1 }),
+      registry,
+    );
     expect(result.action).toBe('route');
     expect(result.agent_id).toBe('default');
     expect(result.reason).toContain('Default agent');
@@ -108,7 +114,10 @@ describe('evaluateConfidenceGate', () => {
   });
 
   it('Rule 3: routes when confidence >= threshold and not ambiguous', () => {
-    const result = evaluateConfidenceGate(makeOutput({ confidence: 0.7, ambiguous: false }), registry);
+    const result = evaluateConfidenceGate(
+      makeOutput({ confidence: 0.7, ambiguous: false }),
+      registry,
+    );
     expect(result.action).toBe('route');
     expect(result.agent_id).toBe('specialist');
     expect(result.reason).toContain('Confidence 0.7 >= threshold 0.7');
@@ -127,7 +136,10 @@ describe('evaluateConfidenceGate', () => {
   });
 
   it('does not route when ambiguous even with high confidence', () => {
-    const result = evaluateConfidenceGate(makeOutput({ confidence: 0.9, ambiguous: true }), registry);
+    const result = evaluateConfidenceGate(
+      makeOutput({ confidence: 0.9, ambiguous: true }),
+      registry,
+    );
     expect(result.action).toBe('fallback');
   });
 

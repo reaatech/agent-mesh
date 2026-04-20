@@ -7,12 +7,8 @@ vi.mock('../../src/config/env.js', () => ({
   },
 }));
 
-const {
-  tlsMiddleware,
-  httpsRedirectMiddleware,
-  hstsMiddleware,
-  securityHeadersMiddleware,
-} = await import('../../src/gateway/tls.middleware.js');
+const { tlsMiddleware, httpsRedirectMiddleware, hstsMiddleware, securityHeadersMiddleware } =
+  await import('../../src/gateway/tls.middleware.js');
 
 function mockReqResNext(overrides: Partial<Request> = {}) {
   const req = {
@@ -21,7 +17,9 @@ function mockReqResNext(overrides: Partial<Request> = {}) {
     path: '/v1/request',
     originalUrl: '/v1/request',
     get: vi.fn((name: string) => {
-      if (name === 'Host') {return 'example.com';}
+      if (name === 'Host') {
+        return 'example.com';
+      }
       return undefined;
     }),
     method: 'POST',

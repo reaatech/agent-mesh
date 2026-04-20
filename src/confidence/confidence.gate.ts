@@ -23,7 +23,7 @@ import { recordClarification } from '../observability/metrics.js';
 export function evaluateConfidenceGate(
   classifierOutput: ClassifierOutput,
   registry: AgentRegistry,
-  bypassClassifier: boolean = false
+  bypassClassifier: boolean = false,
 ): ConfidenceDecision {
   const { agent_id, confidence, ambiguous, detected_language } = classifierOutput;
 
@@ -104,7 +104,7 @@ export function evaluateConfidenceGate(
 export async function generateClarificationQuestion(
   agent: AgentConfig,
   _userInput: string,
-  language: string
+  language: string,
 ): Promise<string> {
   // Check cache first
   const cacheKey = `${agent.agent_id}:${language}`;

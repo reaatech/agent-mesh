@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { buildClassifierPrompt, parseClassifierOutput } from '../../src/classifier/prompt.builder.js';
+import {
+  buildClassifierPrompt,
+  parseClassifierOutput,
+} from '../../src/classifier/prompt.builder.js';
 import type { AgentRegistry } from '../../src/registry/types.js';
 
 const mockRegistry: AgentRegistry = [
@@ -115,7 +118,8 @@ describe('parseClassifierOutput', () => {
   });
 
   it('should parse JSON wrapped in markdown code block', () => {
-    const output = '```json\n{"agent_id":"default","confidence":0.5,"detected_language":"en","intent_summary":"test","entities":{}}\n```';
+    const output =
+      '```json\n{"agent_id":"default","confidence":0.5,"detected_language":"en","intent_summary":"test","entities":{}}\n```';
     const result = parseClassifierOutput(output);
     expect(result.agent_id).toBe('default');
     expect(result.confidence).toBe(0.5);

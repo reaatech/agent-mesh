@@ -9,9 +9,8 @@ vi.mock('../../src/config/env.js', () => ({
   },
 }));
 
-const { loadRegistry, registryState, reloadRegistry } = await import(
-  '../../src/registry/registry.loader.js'
-);
+const { loadRegistry, registryState, reloadRegistry } =
+  await import('../../src/registry/registry.loader.js');
 
 const validDefaultYaml = `
 agent_id: "default"
@@ -51,7 +50,7 @@ describe('loadRegistry', () => {
     await fs.rm(tmpDir, { recursive: true, force: true }).catch(() => {});
   });
 
-it('loads a valid registry with default agent', async () => {
+  it('loads a valid registry with default agent', async () => {
     await fs.writeFile(path.join(tmpDir, 'default.yaml'), validDefaultYaml);
     const registry = await loadRegistry();
     expect(registry.length).toBe(1);

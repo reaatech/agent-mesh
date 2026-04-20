@@ -102,9 +102,7 @@ function extractProfile(response: SlackProfileResponse, userId: string): Employe
 
   // Extract from profile fields (custom fields) or standard fields
   const fields = profile?.fields || {};
-  const employeeId =
-    fields[PROFILE_FIELD_KEYS.EMPLOYEE_ID]?.value ||
-    userId;
+  const employeeId = fields[PROFILE_FIELD_KEYS.EMPLOYEE_ID]?.value || userId;
 
   const displayName =
     profile?.display_name ||
@@ -114,15 +112,9 @@ function extractProfile(response: SlackProfileResponse, userId: string): Employe
     user?.name ||
     'Unknown User';
 
-  const email =
-    profile?.email ||
-    user?.profile?.email ||
-    '';
+  const email = profile?.email || user?.profile?.email || '';
 
-  const title =
-    profile?.title ||
-    user?.profile?.title ||
-    '';
+  const title = profile?.title || user?.profile?.title || '';
 
   // Extract department from title if available
   const department = title ? title.split(' - ')[0] : '';
@@ -179,9 +171,7 @@ async function fetchSlackProfile(slackUserId: string): Promise<SlackProfileRespo
  * Resolve employee profile from Slack user ID
  * Uses caching with 10-minute TTL
  */
-export async function resolveSlackProfile(
-  slackUserId: string
-): Promise<EmployeeProfile> {
+export async function resolveSlackProfile(slackUserId: string): Promise<EmployeeProfile> {
   // Check cache first
   const cached = getCachedProfile(slackUserId);
   if (cached) {
@@ -202,7 +192,10 @@ export async function resolveSlackProfile(
     }
 
     // Log error but don't fail - return a minimal profile
-    logger.error('Error resolving Slack profile', { slackUserId, error: error instanceof Error ? error.message : 'unknown' });
+    logger.error('Error resolving Slack profile', {
+      slackUserId,
+      error: error instanceof Error ? error.message : 'unknown',
+    });
 
     // Return a fallback profile
     return {
@@ -216,9 +209,7 @@ export async function resolveSlackProfile(
 /**
  * Resolve employee profile from Slack user ID (with cache bypass)
  */
-export async function resolveSlackProfileNoCache(
-  slackUserId: string
-): Promise<EmployeeProfile> {
+export async function resolveSlackProfileNoCache(slackUserId: string): Promise<EmployeeProfile> {
   // Remove from cache if exists
   profileCache.delete(slackUserId);
 
@@ -235,9 +226,7 @@ export function clearProfileCache(): void {
 /**
  * Preload profiles for multiple users
  */
-export async function preloadProfiles(
-  userIds: string[]
-): Promise<Map<string, EmployeeProfile>> {
+export async function preloadProfiles(userIds: string[]): Promise<Map<string, EmployeeProfile>> {
   const results = new Map<string, EmployeeProfile>();
 
   await Promise.all(
@@ -246,9 +235,12 @@ export async function preloadProfiles(
         const profile = await resolveSlackProfile(userId);
         results.set(userId, profile);
       } catch (error) {
-        logger.error('Failed to preload Slack profile', { userId, error: error instanceof Error ? error.message : 'unknown' });
+        logger.error('Failed to preload Slack profile', {
+          userId,
+          error: error instanceof Error ? error.message : 'unknown',
+        });
       }
-    })
+    }),
   );
 
   return results;

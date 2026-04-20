@@ -22,13 +22,12 @@ function getSessionMaxTurns(): number {
   return env.SESSION_MAX_TURNS;
 }
 
-function mapSessionSnapshot(
-  id: string,
-  data: Record<string, unknown>,
-): SessionRecord {
+function mapSessionSnapshot(id: string, data: Record<string, unknown>): SessionRecord {
   const ttlValue = data.ttl as { toDate?: () => Date } | Date | undefined;
   const ttl =
-    ttlValue instanceof Date ? ttlValue : ttlValue?.toDate?.() ?? new Date(Date.now() + getSessionTtlMs());
+    ttlValue instanceof Date
+      ? ttlValue
+      : (ttlValue?.toDate?.() ?? new Date(Date.now() + getSessionTtlMs()));
 
   return {
     session_id: id,
@@ -47,9 +46,7 @@ function mapSessionSnapshot(
 async function publishSessionEvent(payload: Record<string, unknown>): Promise<void> {
   try {
     const pubsub = new PubSub({ projectId: env.GOOGLE_CLOUD_PROJECT });
-    await pubsub
-      .topic(PUBSUB_TOPICS.SESSION_EVENTS)
-      .publishMessage({ json: payload });
+    await pubsub.topic(PUBSUB_TOPICS.SESSION_EVENTS).publishMessage({ json: payload });
   } catch {
     // Best effort only. Session lifecycle should not fail because Pub/Sub is unavailable.
   }
@@ -80,10 +77,13 @@ export async function createSession(data: {
   };
 
   const sessionId = uuidv4();
-  await firestore.collection(SESSIONS_COLLECTION).doc(sessionId).create({
-    ...session,
-    ttl: Timestamp.fromDate(ttl),
-  });
+  await firestore
+    .collection(SESSIONS_COLLECTION)
+    .doc(sessionId)
+    .create({
+      ...session,
+      ttl: Timestamp.fromDate(ttl),
+    });
 
   return {
     session_id: sessionId,
@@ -216,11 +216,14 @@ export async function resumeSession(priorSessionId: string): Promise<SessionReco
   });
 
   const firestore = getFirestore();
-  await firestore.collection(SESSIONS_COLLECTION).doc(newSession.session_id).update({
-    turn_history: priorSession.turn_history.slice(-getSessionMaxTurns()),
-    workflow_state: priorSession.workflow_state,
-    updated_at: new Date().toISOString(),
-  });
+  await firestore
+    .collection(SESSIONS_COLLECTION)
+    .doc(newSession.session_id)
+    .update({
+      turn_history: priorSession.turn_history.slice(-getSessionMaxTurns()),
+      workflow_state: priorSession.workflow_state,
+      updated_at: new Date().toISOString(),
+    });
 
   await closeSession(priorSessionId, 'completed');
 

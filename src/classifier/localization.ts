@@ -2,7 +2,11 @@
  * Language detection and localization utilities
  */
 
-import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE, type SupportedLanguage } from '../config/constants.js';
+import {
+  SUPPORTED_LANGUAGES,
+  DEFAULT_LANGUAGE,
+  type SupportedLanguage,
+} from '../config/constants.js';
 
 /**
  * Common text patterns for language detection

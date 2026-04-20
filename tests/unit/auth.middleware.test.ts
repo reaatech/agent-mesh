@@ -53,7 +53,7 @@ describe('authMiddleware', () => {
         expect.objectContaining({
           error: 'Authentication required',
           message: 'Missing x-api-key header',
-        })
+        }),
       );
       expect(next).not.toHaveBeenCalled();
     });
@@ -68,7 +68,7 @@ describe('authMiddleware', () => {
         expect.objectContaining({
           error: 'Authentication failed',
           message: 'Invalid API key',
-        })
+        }),
       );
       expect(next).not.toHaveBeenCalled();
     });
@@ -112,9 +112,8 @@ describe('authMiddleware', () => {
         },
       }));
 
-      const { authMiddleware: devAuthMiddleware } = await import(
-        '../../src/gateway/auth.middleware.js'
-      );
+      const { authMiddleware: devAuthMiddleware } =
+        await import('../../src/gateway/auth.middleware.js');
 
       const { req, res, next } = mockReqRes({ headers: { 'x-api-key': 'dev-key' } });
 
@@ -154,9 +153,8 @@ describe('authMiddleware', () => {
         };
       });
 
-      const { authMiddleware: errorMiddleware } = await import(
-        '../../src/gateway/auth.middleware.js'
-      );
+      const { authMiddleware: errorMiddleware } =
+        await import('../../src/gateway/auth.middleware.js');
 
       const { req, res, next } = mockReqRes({ headers: { 'x-api-key': 'fallback-key' } });
 

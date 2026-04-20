@@ -5,7 +5,12 @@
 import fs from 'fs/promises';
 import { glob } from 'glob';
 import { parse as parseYaml } from 'yaml';
-import { AgentConfigSchema, AgentRegistrySchema, type AgentRegistry, type RegistryLoadResult } from './types.js';
+import {
+  AgentConfigSchema,
+  AgentRegistrySchema,
+  type AgentRegistry,
+  type RegistryLoadResult,
+} from './types.js';
 import { MAX_YAML_FILE_SIZE } from '../config/constants.js';
 import { env } from '../config/env.js';
 import { logger } from '../observability/logger.js';
@@ -20,31 +25,41 @@ const ENV_VAR_SENTINEL = '__UNSET_ENV_VAR__';
  * Missing variables are replaced with a sentinel value that will cause validation to fail
  */
 function expandEnvVars(content: string): string {
-  return content.replace(/\$\{(\w+)(?::-(.+?))?\}/g, (_match, varName: string, defaultValue?: string) => {
-    const value = process.env[varName];
-    if (value !== undefined) {
-      return value;
-    }
+  return content.replace(
+    /\$\{(\w+)(?::-(.+?))?\}/g,
+    (_match, varName: string, defaultValue?: string) => {
+      const value = process.env[varName];
+      if (value !== undefined) {
+        return value;
+      }
 
-    if (defaultValue !== undefined) {
-      return defaultValue;
-    }
+      if (defaultValue !== undefined) {
+        return defaultValue;
+      }
 
-    return ENV_VAR_SENTINEL;
-  });
+      return ENV_VAR_SENTINEL;
+    },
+  );
 }
 
 /**
  * Parse and validate a single YAML file
  */
-async function parseAgentFile(filePath: string): Promise<{ config: AgentRegistry[number]; warnings: string[] } | { error: string; warnings: string[] }> {
+async function parseAgentFile(
+  filePath: string,
+): Promise<
+  { config: AgentRegistry[number]; warnings: string[] } | { error: string; warnings: string[] }
+> {
   const warnings: string[] = [];
 
   // Check file size
   try {
     const stats = await fs.stat(filePath);
     if (stats.size > MAX_YAML_FILE_SIZE) {
-      return { error: `File exceeds size limit (${stats.size} > ${MAX_YAML_FILE_SIZE}): ${filePath}`, warnings };
+      return {
+        error: `File exceeds size limit (${stats.size} > ${MAX_YAML_FILE_SIZE}): ${filePath}`,
+        warnings,
+      };
     }
   } catch {
     return { error: `Cannot stat file: ${filePath}`, warnings };
@@ -70,7 +85,10 @@ async function parseAgentFile(filePath: string): Promise<{ config: AgentRegistry
   try {
     parsed = parseYaml(expanded);
   } catch (err) {
-    return { error: `YAML parse error in ${filePath}: ${err instanceof Error ? err.message : 'unknown'}`, warnings };
+    return {
+      error: `YAML parse error in ${filePath}: ${err instanceof Error ? err.message : 'unknown'}`,
+      warnings,
+    };
   }
 
   // Validate against schema
@@ -224,7 +242,10 @@ export async function reloadRegistry(): Promise<RegistryLoadResult> {
     result.agentIds = newRegistry.map((a) => a.agent_id);
     result.defaultAgentId = newRegistry.find((a) => a.is_default)?.agent_id ?? null;
 
-    logger.info('Registry loaded', { agentCount: result.agentCount, defaultAgentId: result.defaultAgentId });
+    logger.info('Registry loaded', {
+      agentCount: result.agentCount,
+      defaultAgentId: result.defaultAgentId,
+    });
   } catch (err) {
     const error = err instanceof Error ? err : new Error(String(err));
     registryState.setError(error);

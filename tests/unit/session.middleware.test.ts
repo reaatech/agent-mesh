@@ -34,7 +34,9 @@ type RequestWithSessionContext = Request & {
 };
 
 function createMockRequest(overrides: Partial<MockRequest> = {}): RequestWithSessionContext {
-  const mock: Omit<MockRequest, 'sessionContext'> & { sessionContext?: MockRequest['sessionContext'] } = {
+  const mock: Omit<MockRequest, 'sessionContext'> & {
+    sessionContext?: MockRequest['sessionContext'];
+  } = {
     headers: {},
     ...overrides,
   };
@@ -73,9 +75,7 @@ describe('Session Middleware', () => {
         user_id: 'user123',
         status: 'active',
         active_agent: 'test-agent',
-        turn_history: [
-          { role: 'user', content: 'Hello', timestamp: '2024-01-01T00:00:00.000Z' },
-        ],
+        turn_history: [{ role: 'user', content: 'Hello', timestamp: '2024-01-01T00:00:00.000Z' }],
         workflow_state: { step: 'in_progress' },
       });
 
@@ -96,7 +96,7 @@ describe('Session Middleware', () => {
             expect.objectContaining({ role: 'user', content: 'Hello' }),
           ]),
           workflowState: { step: 'in_progress' },
-        })
+        }),
       );
       expect(next).toHaveBeenCalled();
     });
@@ -119,7 +119,7 @@ describe('Session Middleware', () => {
           bypassClassifier: false,
           turnHistory: [],
           workflowState: {},
-        })
+        }),
       );
       expect(next).toHaveBeenCalled();
     });
@@ -145,7 +145,7 @@ describe('Session Middleware', () => {
       expect(req.sessionContext).toEqual(
         expect.objectContaining({
           bypassClassifier: false,
-        })
+        }),
       );
     });
 
@@ -163,7 +163,7 @@ describe('Session Middleware', () => {
         expect.objectContaining({
           sessionId: '',
           bypassClassifier: false,
-        })
+        }),
       );
       expect(next).toHaveBeenCalled();
     });
@@ -186,7 +186,7 @@ describe('Session Middleware', () => {
         expect.objectContaining({
           sessionId: '',
           bypassClassifier: false,
-        })
+        }),
       );
       expect(next).toHaveBeenCalled();
     });

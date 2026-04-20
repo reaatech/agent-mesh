@@ -19,7 +19,11 @@ import {
   getActiveSession,
   updateWorkflowState,
 } from '../session/session.service.js';
-import { IncomingRequestSchema, type AgentResponse, type ClassifierOutput } from '../types/domain.js';
+import {
+  IncomingRequestSchema,
+  type AgentResponse,
+  type ClassifierOutput,
+} from '../types/domain.js';
 import { resolveSlackProfile } from './slackProfile.resolver.js';
 import { logAgentRouted } from '../observability/audit.js';
 
@@ -77,7 +81,9 @@ async function resolveIdentity(parsedRequest: {
 }): Promise<{ userId: string; employeeId: string; displayName: string }> {
   const slackUserId = parsedRequest.slack_user_id;
   if (slackUserId || parsedRequest.entry_point === 'slack') {
-    const profile = await resolveSlackProfile(slackUserId ?? parsedRequest.user_id ?? parsedRequest.employee_id ?? 'unknown');
+    const profile = await resolveSlackProfile(
+      slackUserId ?? parsedRequest.user_id ?? parsedRequest.employee_id ?? 'unknown',
+    );
     return {
       userId: parsedRequest.user_id ?? slackUserId ?? profile.employee_id,
       employeeId: parsedRequest.employee_id ?? profile.employee_id,
@@ -93,7 +99,11 @@ async function resolveIdentity(parsedRequest: {
   };
 }
 
-function buildBypassClassification(activeAgent: string, input: string, locale?: string): ClassifierOutput {
+function buildBypassClassification(
+  activeAgent: string,
+  input: string,
+  locale?: string,
+): ClassifierOutput {
   return {
     agent_id: activeAgent,
     confidence: 1,
@@ -136,12 +146,24 @@ async function orchestrateRequest(parsedRequest: ReturnType<typeof IncomingReque
 
   let sessionId = parsedRequest.session_id ?? activeSession?.session_id ?? uuidv4();
 
-  if (parsedRequest.session_id && activeSession && activeSession.session_id !== parsedRequest.session_id) {
+  if (
+    parsedRequest.session_id &&
+    activeSession &&
+    activeSession.session_id !== parsedRequest.session_id
+  ) {
     sessionId = activeSession.session_id;
   }
   const classification = activeSession
-    ? buildBypassClassification(activeSession.active_agent, parsedRequest.input, parsedRequest.locale)
-    : await classifierService.classify(parsedRequest.input, registryState.registry, parsedRequest.locale);
+    ? buildBypassClassification(
+        activeSession.active_agent,
+        parsedRequest.input,
+        parsedRequest.locale,
+      )
+    : await classifierService.classify(
+        parsedRequest.input,
+        registryState.registry,
+        parsedRequest.locale,
+      );
 
   const decision = activeSession
     ? {
@@ -219,7 +241,13 @@ async function orchestrateRequest(parsedRequest: ReturnType<typeof IncomingReque
     }
   }
 
-  logAgentRouted(requestId, persistedSession?.session_id, targetAgent.agent_id, classification.confidence, activeSession !== null);
+  logAgentRouted(
+    requestId,
+    persistedSession?.session_id,
+    targetAgent.agent_id,
+    classification.confidence,
+    activeSession !== null,
+  );
 
   return {
     status: 200,

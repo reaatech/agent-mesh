@@ -28,15 +28,10 @@ const traceExporter = env.OTEL_EXPORTER_OTLP_ENDPOINT
   : undefined;
 
 /** Span processor */
-const spanProcessor = traceExporter
-  ? new SimpleSpanProcessor(traceExporter)
-  : undefined;
+const spanProcessor = traceExporter ? new SimpleSpanProcessor(traceExporter) : undefined;
 
 /** Instrumentations */
-const instrumentations = [
-  new HttpInstrumentation(),
-  new ExpressInstrumentation(),
-];
+const instrumentations = [new HttpInstrumentation(), new ExpressInstrumentation()];
 
 /** Global SDK instance (lazy initialized) */
 let _sdk: NodeSDK | null = null;

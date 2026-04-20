@@ -49,27 +49,29 @@ const structuredFormat = winston.format.combine(
     format: () => new Date().toISOString(),
   }),
   winston.format.errors({ stack: true }),
-  winston.format.printf(({ timestamp, level, message, service, request_id, session_id, ...meta }) => {
-    const logEntry: Record<string, unknown> = {
-      timestamp,
-      level,
-      service: service || SERVICE_NAME,
-      message,
-    };
+  winston.format.printf(
+    ({ timestamp, level, message, service, request_id, session_id, ...meta }) => {
+      const logEntry: Record<string, unknown> = {
+        timestamp,
+        level,
+        service: service || SERVICE_NAME,
+        message,
+      };
 
-    if (request_id) {
-      logEntry.request_id = request_id;
-    }
-    if (session_id) {
-      logEntry.session_id = session_id;
-    }
+      if (request_id) {
+        logEntry.request_id = request_id;
+      }
+      if (session_id) {
+        logEntry.session_id = session_id;
+      }
 
-    // Add remaining metadata with PII redaction
-    const redactedMeta = redactObject(meta as Record<string, unknown>);
-    Object.assign(logEntry, redactedMeta);
+      // Add remaining metadata with PII redaction
+      const redactedMeta = redactObject(meta as Record<string, unknown>);
+      Object.assign(logEntry, redactedMeta);
 
-    return JSON.stringify(logEntry);
-  })
+      return JSON.stringify(logEntry);
+    },
+  ),
 );
 
 /** Create the logger instance */

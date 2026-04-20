@@ -45,7 +45,7 @@ export const AUDIT_EVENTS = {
   HEALTH_CHECK_FAILED: 'system.health_check_failed',
 } as const;
 
-export type AuditEventType = typeof AUDIT_EVENTS[keyof typeof AUDIT_EVENTS];
+export type AuditEventType = (typeof AUDIT_EVENTS)[keyof typeof AUDIT_EVENTS];
 
 /** Audit event structure */
 export interface AuditEvent {
@@ -116,7 +116,7 @@ export function logAuditEvent(event: AuditEvent): void {
 export function logAuthRequest(
   requestId: string,
   outcome: 'success' | 'failure',
-  details?: Record<string, unknown>
+  details?: Record<string, unknown>,
 ): void {
   const event: AuditEvent = {
     event_type: outcome === 'success' ? AUDIT_EVENTS.AUTH_SUCCESS : AUDIT_EVENTS.AUTH_FAILURE,
@@ -138,7 +138,7 @@ export function logAgentRouted(
   sessionId: string | undefined,
   agentId: string,
   confidence: number,
-  isFallback: boolean
+  isFallback: boolean,
 ): void {
   const event: AuditEvent = {
     event_type: isFallback ? AUDIT_EVENTS.AGENT_FALLBACK : AUDIT_EVENTS.AGENT_ROUTED,
@@ -160,7 +160,7 @@ export function logAgentRouted(
 export function logCircuitBreakerChange(
   agentId: string,
   newState: 'open' | 'closed' | 'half_open',
-  details?: Record<string, unknown>
+  details?: Record<string, unknown>,
 ): void {
   const eventType =
     newState === 'open'
@@ -187,7 +187,7 @@ export function logCircuitBreakerChange(
 export function logSecurityEvent(
   eventType: AuditEventType,
   requestId: string,
-  details?: Record<string, unknown>
+  details?: Record<string, unknown>,
 ): void {
   const event: AuditEvent = {
     event_type: eventType,

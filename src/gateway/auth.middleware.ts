@@ -116,7 +116,10 @@ export async function authMiddleware(
       return;
     }
   } catch (err) {
-    logAuthRequest(requestId, 'failure', { reason: 'validation_error', err: err instanceof Error ? err.message : 'unknown' });
+    logAuthRequest(requestId, 'failure', {
+      reason: 'validation_error',
+      err: err instanceof Error ? err.message : 'unknown',
+    });
     res.status(503).json({
       error: 'Authentication unavailable',
       message: 'Unable to validate API key at this time',

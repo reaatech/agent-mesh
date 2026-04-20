@@ -48,7 +48,14 @@ vi.mock('@google-cloud/firestore/build/src/index.js', () => ({
 }));
 
 // Import after mocking
-const { createSession, getActiveSession, appendTurn, updateWorkflowState, closeSession, resumeSession } = await import('../../src/session/session.service.js');
+const {
+  createSession,
+  getActiveSession,
+  appendTurn,
+  updateWorkflowState,
+  closeSession,
+  resumeSession,
+} = await import('../../src/session/session.service.js');
 
 describe('Session Service', () => {
   beforeEach(() => {
@@ -85,7 +92,7 @@ describe('Session Service', () => {
           active_agent: 'test-agent',
           turn_history: [],
           workflow_state: {},
-        })
+        }),
       );
 
       expect(session).toEqual(
@@ -96,7 +103,7 @@ describe('Session Service', () => {
           active_agent: 'test-agent',
           turn_history: [],
           workflow_state: {},
-        })
+        }),
       );
       expect(session.session_id).toBeDefined();
     });
@@ -166,10 +173,11 @@ describe('Session Service', () => {
           where: () => ({
             where: () => ({
               limit: () => ({
-                get: () => Promise.resolve({
-                  empty: false,
-                  docs: [mockDocSnapshot],
-                }),
+                get: () =>
+                  Promise.resolve({
+                    empty: false,
+                    docs: [mockDocSnapshot],
+                  }),
               }),
             }),
           }),
@@ -185,7 +193,7 @@ describe('Session Service', () => {
           employee_id: 'emp456',
           status: 'active',
           active_agent: 'test-agent',
-        })
+        }),
       );
     });
 
@@ -255,7 +263,7 @@ describe('Session Service', () => {
           role: 'user',
           content: 'test',
           timestamp: '2024-01-01T00:00:00.000Z',
-        })
+        }),
       ).rejects.toThrow('Session nonexistent not found');
     });
 
@@ -310,7 +318,7 @@ describe('Session Service', () => {
         expect.objectContaining({
           workflow_state: workflowState,
           updated_at: expect.any(String),
-        })
+        }),
       );
     });
   });
@@ -329,7 +337,7 @@ describe('Session Service', () => {
         expect.objectContaining({
           status: 'completed',
           updated_at: expect.any(String),
-        })
+        }),
       );
       expect(mockPublishMessage).toHaveBeenCalled();
     });
@@ -346,7 +354,7 @@ describe('Session Service', () => {
       expect(mockUpdate).toHaveBeenCalledWith(
         expect.objectContaining({
           status: 'abandoned',
-        })
+        }),
       );
     });
   });
@@ -358,9 +366,7 @@ describe('Session Service', () => {
         employee_id: 'emp456',
         status: 'completed',
         active_agent: 'test-agent',
-        turn_history: [
-          { role: 'user', content: 'Hello', timestamp: '2024-01-01T00:00:00.000Z' },
-        ],
+        turn_history: [{ role: 'user', content: 'Hello', timestamp: '2024-01-01T00:00:00.000Z' }],
         workflow_state: { step: 'in_progress' },
         created_at: '2024-01-01T00:00:00.000Z',
         updated_at: '2024-01-01T00:00:00.000Z',

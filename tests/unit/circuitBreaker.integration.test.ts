@@ -48,8 +48,16 @@ vi.mock('../../src/session/firestoreClient.js', () => ({
     async runTransaction<T>(
       handler: (transaction: {
         get: (docRef: { get: () => Promise<unknown> }) => Promise<unknown>;
-        set: (docRef: { set: (data: Record<string, unknown>) => Promise<void> }, data: Record<string, unknown>) => Promise<void>;
-        update: (docRef: { set: (data: Record<string, unknown>, options?: { merge?: boolean }) => Promise<void> }, data: Record<string, unknown>) => Promise<void>;
+        set: (
+          docRef: { set: (data: Record<string, unknown>) => Promise<void> },
+          data: Record<string, unknown>,
+        ) => Promise<void>;
+        update: (
+          docRef: {
+            set: (data: Record<string, unknown>, options?: { merge?: boolean }) => Promise<void>;
+          },
+          data: Record<string, unknown>,
+        ) => Promise<void>;
       }) => Promise<T>,
     ) {
       return handler({

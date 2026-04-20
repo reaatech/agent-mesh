@@ -177,7 +177,8 @@ describe('restoreCircuitBreakerStates', () => {
   });
 
   it('retries on failure', async () => {
-    const mockGet = vi.fn()
+    const mockGet = vi
+      .fn()
       .mockRejectedValueOnce(new Error('transient'))
       .mockResolvedValue({ docs: [] });
 

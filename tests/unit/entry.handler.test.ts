@@ -100,9 +100,8 @@ vi.mock('../../src/config/constants.js', () => ({
   HEALTH_CHECK_COLLECTION: 'health_checks',
 }));
 
-const { healthCheck, deepHealthCheck, handleRequest, handleInternalRequest } = await import(
-  '../../src/gateway/entry.handler.js'
-);
+const { healthCheck, deepHealthCheck, handleRequest, handleInternalRequest } =
+  await import('../../src/gateway/entry.handler.js');
 
 function mockReqRes(body: Record<string, unknown> = {}) {
   const req = {

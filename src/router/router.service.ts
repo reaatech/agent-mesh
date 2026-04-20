@@ -28,7 +28,7 @@ export async function dispatchToAgent(
     detectedLanguage: string;
     turnHistory: TurnEntry[];
     workflowState: Record<string, unknown>;
-  }
+  },
 ): Promise<AgentResponse> {
   const start = Date.now();
 
@@ -86,7 +86,7 @@ export async function dispatchToAgent(
 export function buildTurnEntry(
   role: 'user' | 'agent',
   content: string,
-  intentSummary?: string
+  intentSummary?: string,
 ): TurnEntry {
   return {
     role,
@@ -115,7 +115,7 @@ export function shouldCloseSession(response: AgentResponse): boolean {
  */
 export function getUpdatedWorkflowState(
   current: Record<string, unknown>,
-  response: AgentResponse
+  response: AgentResponse,
 ): Record<string, unknown> {
   return response.workflow_state ?? current;
 }

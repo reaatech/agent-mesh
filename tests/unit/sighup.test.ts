@@ -26,9 +26,8 @@ vi.mock('../../src/config/env.js', () => ({
   },
 }));
 
-const { setupSighupHandler, triggerReload, isReloadPending, cleanupSighupHandler } = await import(
-  '../../src/registry/sighup.js'
-);
+const { setupSighupHandler, triggerReload, isReloadPending, cleanupSighupHandler } =
+  await import('../../src/registry/sighup.js');
 
 describe('SIGHUP Handler', () => {
   beforeEach(() => {

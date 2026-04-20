@@ -32,20 +32,20 @@ Classification guidelines:
 export function buildClassifierPrompt(
   registry: AgentRegistry,
   userInput: string,
-  detectedLanguage?: string
+  detectedLanguage?: string,
 ): string {
-  const agentSections = registry.map((agent) => {
-    const examplesSection = agent.examples
-      .map((ex) => `    - "${ex}"`)
-      .join('\n');
+  const agentSections = registry
+    .map((agent) => {
+      const examplesSection = agent.examples.map((ex) => `    - "${ex}"`).join('\n');
 
-    return `### ${agent.display_name} (${agent.agent_id})
+      return `### ${agent.display_name} (${agent.agent_id})
 Description: ${agent.description}
 Examples of queries for this agent:
 ${examplesSection}
 ${agent.clarification_context ? `Clarification context: ${agent.clarification_context}` : ''}
 `;
-  }).join('\n');
+    })
+    .join('\n');
 
   const languageHint = detectedLanguage
     ? `\nNote: The user's previous messages suggest they prefer ${detectedLanguage}. Consider this when detecting language.`

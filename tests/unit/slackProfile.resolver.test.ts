@@ -6,8 +6,13 @@ vi.mock('../../src/config/env.js', () => ({
   },
 }));
 
-const { resolveSlackProfile, resolveSlackProfileNoCache, clearProfileCache, preloadProfiles, EmployeeNotFoundError } =
-  await import('../../src/gateway/slackProfile.resolver.js');
+const {
+  resolveSlackProfile,
+  resolveSlackProfileNoCache,
+  clearProfileCache,
+  preloadProfiles,
+  EmployeeNotFoundError,
+} = await import('../../src/gateway/slackProfile.resolver.js');
 
 const mockFetch = vi.fn();
 vi.stubGlobal('fetch', mockFetch);

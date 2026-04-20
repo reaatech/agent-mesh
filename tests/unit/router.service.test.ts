@@ -35,8 +35,13 @@ vi.mock('../../src/utils/circuitBreaker.js', () => ({
   },
 }));
 
-const { dispatchToAgent, buildTurnEntry, formatAgentResponse, shouldCloseSession, getUpdatedWorkflowState } =
-  await import('../../src/router/router.service.js');
+const {
+  dispatchToAgent,
+  buildTurnEntry,
+  formatAgentResponse,
+  shouldCloseSession,
+  getUpdatedWorkflowState,
+} = await import('../../src/router/router.service.js');
 
 const mockAgent: AgentConfig = {
   agent_id: 'test-agent',

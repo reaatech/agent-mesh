@@ -59,7 +59,9 @@ class MockClassifier {
 
     // Simple keyword-based routing for development
     for (const agent of registry) {
-      if (agent.is_default) {continue;}
+      if (agent.is_default) {
+        continue;
+      }
 
       // Check if any examples match keywords in the input
       for (const example of agent.examples) {
@@ -103,11 +105,13 @@ class GeminiClassifier {
   private initialized = false;
 
   async init(): Promise<void> {
-    if (this.initialized) {return;}
+    if (this.initialized) {
+      return;
+    }
 
     try {
       // Dynamic import to avoid build errors when package is not installed
-       
+
       const vertexai = await import('@google-cloud/vertexai');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const VertexAI = (vertexai as any).VertexAI;
@@ -137,7 +141,7 @@ class GeminiClassifier {
   async classify(
     userInput: string,
     registry: AgentRegistry,
-    _detectedLanguage?: string
+    _detectedLanguage?: string,
   ): Promise<ClassifierOutput> {
     await this.init();
 
@@ -168,7 +172,11 @@ class GeminiClassifier {
 
         if (isRateLimitError(error) && attempt < MAX_RETRY_ATTEMPTS) {
           const delayMs = INITIAL_RETRY_DELAY_MS * Math.pow(2, attempt - 1);
-          logger.warn('Rate limit hit, retrying', { delayMs, attempt, maxAttempts: MAX_RETRY_ATTEMPTS });
+          logger.warn('Rate limit hit, retrying', {
+            delayMs,
+            attempt,
+            maxAttempts: MAX_RETRY_ATTEMPTS,
+          });
           await sleep(delayMs);
           continue;
         }
@@ -210,7 +218,7 @@ export class ClassifierService {
   async classify(
     userInput: string,
     registry: AgentRegistry,
-    priorLanguage?: string
+    priorLanguage?: string,
   ): Promise<ClassifierOutput> {
     try {
       if (this.useMock || !this.geminiClassifier) {

@@ -8,11 +8,8 @@ vi.mock('../../src/config/env.js', () => ({
   },
 }));
 
-const {
-  rateLimiterMiddleware,
-  clearRateLimitBuckets,
-  getBucketState,
-} = await import('../../src/gateway/rateLimiter.middleware.js');
+const { rateLimiterMiddleware, clearRateLimitBuckets, getBucketState } =
+  await import('../../src/gateway/rateLimiter.middleware.js');
 
 const mockResponse = (): Partial<import('express').Response> => {
   const res: Partial<import('express').Response> = {

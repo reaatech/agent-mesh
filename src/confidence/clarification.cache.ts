@@ -29,7 +29,9 @@ class ClarificationCache {
    */
   get(key: string): string | null {
     const entry = this.cache.get(key);
-    if (!entry) {return null;}
+    if (!entry) {
+      return null;
+    }
 
     // Check expiration
     if (Date.now() > entry.expiresAt) {
