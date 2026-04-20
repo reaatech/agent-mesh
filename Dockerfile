@@ -9,6 +9,9 @@ WORKDIR /app
 # Copy package files
 COPY package.json package-lock.json ./
 
+# Skip husky in Docker builds
+ENV HUSKY=0
+
 # Install dependencies (including devDeps for build)
 RUN npm ci --include=dev
 
