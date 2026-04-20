@@ -7,44 +7,6 @@ on:
     branches: [main]
 
 jobs:
-  # Lint and type check
-  lint-and-typecheck:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-          cache-dependency-path: 'package-lock.json'
-      - run: npm ci
-      - name: Run ESLint
-        run: npm run lint
-      - name: Run TypeScript type check
-        run: npm run typecheck
-      - name: Check formatting
-        run: npm run format:check
-
-  # Unit and contract tests
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-          cache-dependency-path: 'package-lock.json'
-      - run: npm ci
-      - name: Run tests with coverage
-        run: npm run test:coverage
-      - name: Upload coverage to GitHub
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: coverage/
-
-  # Build
   build:
     runs-on: ubuntu-latest
     steps:
@@ -63,20 +25,7 @@ jobs:
           name: dist
           path: dist/
 
-  # Docker build
-  docker-build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build Docker image
-        run: docker build -t agent-mesh:test .
-      - name: Check image size
-        run: |
-          SIZE=$(docker images agent-mesh:test --format "{{.Size}}")
-          echo "Image size: $SIZE"
-
-  # Security scan
-  security:
+  code-quality:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -88,15 +37,49 @@ jobs:
       - run: npm ci
       - name: Run npm audit
         run: npm audit --audit-level=high
-      - name: Run ESLint security plugin
-        run: npm run lint -- --rule 'security/detect-object-injection: error' || true
+      - name: Run ESLint
+        run: npm run lint
+      - name: Run TypeScript type check
+        run: npm run typecheck
+      - name: Check formatting
+        run: npm run format:check
 
-  # Required status check aggregation
+  test:
+    runs-on: ubuntu-latest
+    needs: [build, code-quality]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+      - run: npm ci
+      - name: Run tests with coverage
+        run: npm run test:coverage
+      - name: Upload coverage to GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: [build, code-quality]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t agent-mesh:test .
+      - name: Check image size
+        run: |
+          SIZE=$(docker images agent-mesh:test --format "{{.Size}}")
+          echo "Image size: $SIZE"
+
   required-checks:
     runs-on: ubuntu-latest
-    needs: [lint-and-typecheck, test, build, docker-build, security]
+    needs: [build, code-quality, test, docker-build]
     if: always()
     steps:
       - name: Check all required jobs
-        if: needs.lint-and-typecheck.result != 'success' || needs.test.result != 'success' || needs.build.result != 'success'
+        if: needs.build.result != 'success' || needs.code-quality.result != 'success' || needs.test.result != 'success' || needs.docker-build.result != 'success'
         run: exit 1
