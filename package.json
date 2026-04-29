@@ -57,7 +57,7 @@
     "@opentelemetry/sdk-metrics": "^1.25.0",
     "@opentelemetry/sdk-node": "^0.52.0",
     "express": "^5.0.0",
-    "express-rate-limit": "^7.1.5",
+    "express-rate-limit": "^8.4.1",
     "node-fetch": "^3.3.2",
     "winston": "^3.11.0",
     "yaml": "^2.4.0",
