@@ -6,15 +6,19 @@ const mockClientCallTool = vi.fn();
 const mockClientClose = vi.fn();
 
 vi.mock('@modelcontextprotocol/sdk/client/index.js', () => ({
-  Client: vi.fn().mockImplementation(() => ({
-    connect: mockClientConnect,
-    callTool: mockClientCallTool,
-    close: mockClientClose,
-  })),
+  Client: vi.fn().mockImplementation(function () {
+    return {
+      connect: mockClientConnect,
+      callTool: mockClientCallTool,
+      close: mockClientClose,
+    };
+  }),
 }));
 
 vi.mock('@modelcontextprotocol/sdk/client/streamableHttp.js', () => ({
-  StreamableHTTPClientTransport: vi.fn().mockImplementation(() => ({})),
+  StreamableHTTPClientTransport: vi.fn().mockImplementation(function () {
+    return {};
+  }),
 }));
 
 vi.mock('../../src/config/constants.js', () => ({
