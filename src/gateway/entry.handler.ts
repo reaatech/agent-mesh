@@ -277,7 +277,7 @@ export async function handleRequest(req: AuthenticatedRequest, res: Response): P
     if (!validationResult.success) {
       res.status(400).json({
         error: 'Invalid request',
-        details: validationResult.error.errors,
+        details: validationResult.error.issues,
       });
       return;
     }

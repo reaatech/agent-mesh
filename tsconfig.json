@@ -26,11 +26,7 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "isolatedModules": true,
-    "types": ["node"],
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "types": ["node"]
   },
   "include": ["src/**/*", "tests/**/*"],
   "exclude": ["node_modules", "dist", "coverage"],

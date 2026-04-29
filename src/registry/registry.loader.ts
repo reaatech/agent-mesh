@@ -94,7 +94,7 @@ async function parseAgentFile(
   // Validate against schema
   const result = AgentConfigSchema.safeParse(parsed);
   if (!result.success) {
-    const errors = result.error.errors.map((e) => `${e.path.join('.')}: ${e.message}`).join('; ');
+    const errors = result.error.issues.map((e) => `${e.path.join('.')}: ${e.message}`).join('; ');
     return { error: `Validation error in ${filePath}: ${errors}`, warnings };
   }
 
@@ -143,7 +143,7 @@ export async function loadRegistry(): Promise<AgentRegistry> {
   // Validate cross-agent invariants
   const validationResult = AgentRegistrySchema.safeParse(configs);
   if (!validationResult.success) {
-    const errorMessages = validationResult.error.errors.map((e) => e.message).join('; ');
+    const errorMessages = validationResult.error.issues.map((e) => e.message).join('; ');
     throw new Error(`Registry invariant validation failed: ${errorMessages}`);
   }
 
