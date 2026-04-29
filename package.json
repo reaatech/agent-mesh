@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@google-cloud/aiplatform": "^4.0.0",
-    "@google-cloud/firestore": "^7.0.0",
+    "@google-cloud/firestore": "^8.5.0",
     "@google-cloud/pubsub": "^4.0.0",
     "@google-cloud/secret-manager": "^6.0.0",
     "@google-cloud/vertexai": "^1.0.0",
