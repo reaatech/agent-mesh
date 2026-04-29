@@ -2,7 +2,7 @@
 # Target image size: <100MB
 
 # Stage 1: Build
-FROM node:22-alpine AS builder
+FROM node:25-alpine AS builder
 
 WORKDIR /app
 
@@ -25,7 +25,7 @@ RUN npm run build
 RUN npm prune --production
 
 # Stage 2: Production
-FROM node:22-alpine AS production
+FROM node:25-alpine AS production
 
 WORKDIR /app
 

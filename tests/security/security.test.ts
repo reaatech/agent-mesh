@@ -63,7 +63,7 @@ vi.mock('../../src/session/firestoreClient.js', () => ({
   }),
 }));
 
-vi.mock('@google-cloud/firestore/build/src/index.js', () => ({
+vi.mock('@google-cloud/firestore', () => ({
   Timestamp: {
     fromDate: (date: Date) => ({ toDate: () => date }),
   },

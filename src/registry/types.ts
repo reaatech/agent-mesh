@@ -33,12 +33,10 @@ function isSsrfSafeUrl(url: string): boolean {
   }
 }
 
-const ssrfSafeUrl = z.string().refine(
-  (url) => isSsrfSafeUrl(url),
-  (url) => ({
-    message: `Endpoint URL is not allowed: ${url}. localhost and private IP ranges are rejected for SSRF protection.`,
-  }),
-);
+const ssrfSafeUrl = z.string().refine((url) => isSsrfSafeUrl(url), {
+  message:
+    'Endpoint URL is not allowed: localhost and private IP ranges are rejected for SSRF protection.',
+});
 
 /**
  * Agent configuration schema with SSRF-safe endpoint validation

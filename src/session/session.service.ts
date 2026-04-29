@@ -4,7 +4,7 @@
  */
 
 import crypto from 'crypto';
-import { FieldValue, Timestamp } from '@google-cloud/firestore/build/src/index.js';
+import { FieldValue, Timestamp } from '@google-cloud/firestore';
 import { PubSub } from '@google-cloud/pubsub';
 import { env } from '../config/env.js';
 import { PUBSUB_TOPICS } from '../config/constants.js';
