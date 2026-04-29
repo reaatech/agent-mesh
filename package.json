@@ -61,7 +61,7 @@
     "node-fetch": "^3.3.2",
     "winston": "^3.11.0",
     "yaml": "^2.4.0",
-    "zod": "^3.23.0"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
