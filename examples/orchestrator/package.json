@@ -8,8 +8,6 @@
   "scripts": {
     "build": "tsc",
     "dev": "npm run build && node --enable-source-maps dist/index.js",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit"
   },
