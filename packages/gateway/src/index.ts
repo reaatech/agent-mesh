@@ -1,4 +1,9 @@
-export { healthCheck, deepHealthCheck, handleRequest, handleInternalRequest } from './entry.handler.js';
+export {
+  healthCheck,
+  deepHealthCheck,
+  handleRequest,
+  handleInternalRequest,
+} from './entry.handler.js';
 export { authMiddleware, clearAuthCache } from './auth.middleware.js';
 export {
   rateLimiterMiddleware,

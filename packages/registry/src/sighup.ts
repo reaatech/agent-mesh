@@ -1,5 +1,5 @@
-import { reloadRegistry } from './registry.loader.js';
 import { logger } from '@reaatech/agent-mesh-observability';
+import { reloadRegistry } from './registry.loader.js';
 
 const DEFAULT_DEBOUNCE_MS = 5000;
 

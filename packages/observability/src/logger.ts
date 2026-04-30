@@ -1,6 +1,6 @@
-import winston from 'winston';
 import { SERVICE_NAME } from '@reaatech/agent-mesh';
 import { env } from '@reaatech/agent-mesh';
+import winston from 'winston';
 
 const PII_PATTERNS = [
   /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,

@@ -1,15 +1,15 @@
-import fs from 'fs/promises';
+import fs from 'node:fs/promises';
+import { MAX_YAML_FILE_SIZE } from '@reaatech/agent-mesh';
+import { env } from '@reaatech/agent-mesh';
+import { logger } from '@reaatech/agent-mesh-observability';
 import { glob } from 'glob';
 import { parse as parseYaml } from 'yaml';
 import {
   AgentConfigSchema,
-  AgentRegistrySchema,
   type AgentRegistry,
+  AgentRegistrySchema,
   type RegistryLoadResult,
 } from './types.js';
-import { MAX_YAML_FILE_SIZE } from '@reaatech/agent-mesh';
-import { env } from '@reaatech/agent-mesh';
-import { logger } from '@reaatech/agent-mesh-observability';
 
 const ENV_VAR_SENTINEL = '__UNSET_ENV_VAR__';
 
@@ -132,7 +132,7 @@ class RegistryState {
   private _defaultAgent: AgentRegistry[number] | null = null;
   private _agentMap: Map<string, AgentRegistry[number]> = new Map();
   private _loadError: Error | null = null;
-  private _lastLoadTime: number = 0;
+  private _lastLoadTime = 0;
 
   get registry(): AgentRegistry | null {
     return this._registry;

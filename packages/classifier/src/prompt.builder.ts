@@ -1,5 +1,5 @@
-import type { AgentRegistry } from '@reaatech/agent-mesh-registry';
 import type { ClassifierOutput } from '@reaatech/agent-mesh';
+import type { AgentRegistry } from '@reaatech/agent-mesh-registry';
 
 const SYSTEM_PROMPT = `You are an intent classifier for a multi-agent system. Your job is to analyze user requests and determine which specialized agent should handle them.
 

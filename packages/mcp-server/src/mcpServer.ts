@@ -1,8 +1,8 @@
-import type { NextFunction, Request, Response } from 'express';
-import { logger } from '@reaatech/agent-mesh-observability';
 import { handleInternalRequest } from '@reaatech/agent-mesh-gateway';
+import { logger } from '@reaatech/agent-mesh-observability';
 import { registryState } from '@reaatech/agent-mesh-registry';
 import { getSessionById } from '@reaatech/agent-mesh-session';
+import type { NextFunction, Request, Response } from 'express';
 
 export interface McpMessage {
   jsonrpc: '2.0';

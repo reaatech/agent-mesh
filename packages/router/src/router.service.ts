@@ -1,11 +1,14 @@
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 const uuidv4 = crypto.randomUUID;
-import type { AgentConfig } from '@reaatech/agent-mesh-registry';
-import type { ContextPacket, AgentResponse, TurnEntry } from '@reaatech/agent-mesh';
-import { mcpClientFactory } from './mcp.client.js';
-import { circuitBreaker } from '@reaatech/agent-mesh-utils';
+import type { AgentResponse, ContextPacket, TurnEntry } from '@reaatech/agent-mesh';
 import { env } from '@reaatech/agent-mesh';
-import { recordAgentDispatchDuration, recordAgentDispatchError } from '@reaatech/agent-mesh-observability';
+import {
+  recordAgentDispatchDuration,
+  recordAgentDispatchError,
+} from '@reaatech/agent-mesh-observability';
+import type { AgentConfig } from '@reaatech/agent-mesh-registry';
+import { circuitBreaker } from '@reaatech/agent-mesh-utils';
+import { mcpClientFactory } from './mcp.client.js';
 
 export async function dispatchToAgent(
   agent: AgentConfig,

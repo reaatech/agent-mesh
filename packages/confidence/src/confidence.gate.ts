@@ -1,14 +1,14 @@
-import type { AgentRegistry, AgentConfig } from '@reaatech/agent-mesh-registry';
 import type { ClassifierOutput, ConfidenceDecision } from '@reaatech/agent-mesh';
-import { getClarificationQuestion } from '@reaatech/agent-mesh-classifier';
-import { clarificationCache } from './clarification.cache.js';
 import { env } from '@reaatech/agent-mesh';
+import { getClarificationQuestion } from '@reaatech/agent-mesh-classifier';
 import { recordClarification } from '@reaatech/agent-mesh-observability';
+import type { AgentConfig, AgentRegistry } from '@reaatech/agent-mesh-registry';
+import { clarificationCache } from './clarification.cache.js';
 
 export function evaluateConfidenceGate(
   classifierOutput: ClassifierOutput,
   registry: AgentRegistry,
-  bypassClassifier: boolean = false,
+  bypassClassifier = false,
 ): ConfidenceDecision {
   const { agent_id, confidence, ambiguous, detected_language } = classifierOutput;
 

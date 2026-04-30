@@ -1,5 +1,5 @@
-import type { Request, Response, NextFunction } from 'express';
 import { env } from '@reaatech/agent-mesh';
+import type { NextFunction, Request, Response } from 'express';
 
 function isHttps(req: Request): boolean {
   if (req.secure) {

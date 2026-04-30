@@ -4,19 +4,24 @@
  */
 
 import './otel.js';
-import express from 'express';
-import { env, SERVICE_NAME, SERVICE_VERSION, MAX_REQUEST_BODY_SIZE } from '@reaatech/agent-mesh';
-import { initRegistry, setupSighupHandler } from '@reaatech/agent-mesh-registry';
-import { authMiddleware, healthCheck, deepHealthCheck, handleRequest } from '@reaatech/agent-mesh-gateway';
+import { MAX_REQUEST_BODY_SIZE, SERVICE_NAME, SERVICE_VERSION, env } from '@reaatech/agent-mesh';
+import {
+  authMiddleware,
+  deepHealthCheck,
+  handleRequest,
+  healthCheck,
+} from '@reaatech/agent-mesh-gateway';
 import { rateLimiterMiddleware } from '@reaatech/agent-mesh-gateway';
 import { tlsMiddleware } from '@reaatech/agent-mesh-gateway';
 import { mcpMiddleware } from '@reaatech/agent-mesh-mcp-server';
-import { sseHandler, messageHandler } from '@reaatech/agent-mesh-mcp-server';
+import { messageHandler, sseHandler } from '@reaatech/agent-mesh-mcp-server';
+import { logger } from '@reaatech/agent-mesh-observability';
+import { initRegistry, setupSighupHandler } from '@reaatech/agent-mesh-registry';
 import {
   startCircuitBreakerPersistence,
   stopCircuitBreakerPersistence,
 } from '@reaatech/agent-mesh-utils';
-import { logger } from '@reaatech/agent-mesh-observability';
+import express from 'express';
 
 async function main(): Promise<void> {
   logger.info('Starting agent-mesh', { service: SERVICE_NAME, version: SERVICE_VERSION });

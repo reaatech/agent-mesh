@@ -1,9 +1,9 @@
-import type { AgentRegistry } from '@reaatech/agent-mesh-registry';
 import type { ClassifierOutput } from '@reaatech/agent-mesh';
-import { buildClassifierPrompt, parseClassifierOutput } from './prompt.builder.js';
-import { detectLanguage } from './localization.js';
 import { env } from '@reaatech/agent-mesh';
 import { logger } from '@reaatech/agent-mesh-observability';
+import type { AgentRegistry } from '@reaatech/agent-mesh-registry';
+import { detectLanguage } from './localization.js';
+import { buildClassifierPrompt, parseClassifierOutput } from './prompt.builder.js';
 
 interface GeminiResponse {
   response?: {
@@ -88,7 +88,7 @@ class GeminiClassifier {
 
     try {
       const vertexai = await import('@google-cloud/vertexai');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: VertexAI dynamic import type
       const VertexAI = (vertexai as any).VertexAI;
 
       const vertexAI = new VertexAI({
@@ -146,7 +146,7 @@ class GeminiClassifier {
         lastError = error instanceof Error ? error : new Error(String(error));
 
         if (isRateLimitError(error) && attempt < MAX_RETRY_ATTEMPTS) {
-          const delayMs = INITIAL_RETRY_DELAY_MS * Math.pow(2, attempt - 1);
+          const delayMs = INITIAL_RETRY_DELAY_MS * 2 ** (attempt - 1);
           logger.warn('Rate limit hit, retrying', {
             delayMs,
             attempt,

@@ -1,9 +1,14 @@
-import crypto from 'crypto';
-import type { Request, Response } from 'express';
+import crypto from 'node:crypto';
 import { HEALTH_CHECK_COLLECTION, SERVICE_NAME, SERVICE_VERSION } from '@reaatech/agent-mesh';
+import { env } from '@reaatech/agent-mesh';
+import {
+  type AgentResponse,
+  type ClassifierOutput,
+  IncomingRequestSchema,
+} from '@reaatech/agent-mesh';
 import { classifierService } from '@reaatech/agent-mesh-classifier';
 import { evaluateConfidenceGate } from '@reaatech/agent-mesh-confidence';
-import { env } from '@reaatech/agent-mesh';
+import { logAgentRouted } from '@reaatech/agent-mesh-observability';
 import { registryState } from '@reaatech/agent-mesh-registry';
 import { dispatchToAgent } from '@reaatech/agent-mesh-router';
 import { getFirestore } from '@reaatech/agent-mesh-session';
@@ -14,13 +19,8 @@ import {
   getActiveSession,
   updateWorkflowState,
 } from '@reaatech/agent-mesh-session';
-import {
-  IncomingRequestSchema,
-  type AgentResponse,
-  type ClassifierOutput,
-} from '@reaatech/agent-mesh';
+import type { Request, Response } from 'express';
 import { resolveSlackProfile } from './slackProfile.resolver.js';
-import { logAgentRouted } from '@reaatech/agent-mesh-observability';
 
 const uuidv4 = crypto.randomUUID;
 

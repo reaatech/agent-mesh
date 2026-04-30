@@ -1,7 +1,7 @@
-import crypto from 'crypto';
-import type { Request, Response, NextFunction } from 'express';
+import crypto from 'node:crypto';
 import { env } from '@reaatech/agent-mesh';
 import { logAuthRequest } from '@reaatech/agent-mesh-observability';
+import type { NextFunction, Request, Response } from 'express';
 
 const uuidv4 = crypto.randomUUID;
 

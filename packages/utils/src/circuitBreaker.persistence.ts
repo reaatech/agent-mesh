@@ -1,6 +1,6 @@
-import { getFirestore } from '@reaatech/agent-mesh-session';
 import { env } from '@reaatech/agent-mesh';
 import type { CircuitBreakerState, CircuitState } from '@reaatech/agent-mesh';
+import { getFirestore } from '@reaatech/agent-mesh-session';
 import { circuitBreaker } from './circuitBreaker.js';
 
 const CIRCUIT_BREAKERS_COLLECTION = 'circuit_breakers';
@@ -144,7 +144,7 @@ export async function persistCircuitBreakerState(state: CircuitBreakerState): Pr
         return;
       }
 
-      const backoffMs = 250 * Math.pow(2, attempt);
+      const backoffMs = 250 * 2 ** attempt;
       await new Promise((resolve) => setTimeout(resolve, backoffMs));
     }
   }
@@ -239,7 +239,7 @@ export async function restoreCircuitBreakerStates(maxRetries = 5): Promise<void>
       return;
     } catch (error) {
       lastError = error as Error;
-      const backoffMs = Math.min(1000 * Math.pow(2, attempt), 30000);
+      const backoffMs = Math.min(1000 * 2 ** attempt, 30000);
       await new Promise((resolve) => setTimeout(resolve, backoffMs));
     }
   }

@@ -1,5 +1,5 @@
-import type { NextFunction, Request, Response } from 'express';
 import { recordSessionLookupDuration } from '@reaatech/agent-mesh-observability';
+import type { NextFunction, Request, Response } from 'express';
 import { getActiveSession } from './session.service.js';
 
 type SessionContext = {

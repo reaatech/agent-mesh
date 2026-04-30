@@ -1,10 +1,10 @@
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import { FieldValue, Timestamp } from '@google-cloud/firestore';
 import { PubSub } from '@google-cloud/pubsub';
 import { env } from '@reaatech/agent-mesh';
 import { PUBSUB_TOPICS } from '@reaatech/agent-mesh';
-import { getFirestore } from './firestoreClient.js';
 import type { SessionRecord, SessionStatus, TurnEntry } from '@reaatech/agent-mesh';
+import { getFirestore } from './firestoreClient.js';
 
 const uuidv4 = crypto.randomUUID;
 const SESSIONS_COLLECTION = 'sessions';

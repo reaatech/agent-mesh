@@ -1,6 +1,6 @@
 import {
-  SUPPORTED_LANGUAGES,
   DEFAULT_LANGUAGE,
+  SUPPORTED_LANGUAGES,
   type SupportedLanguage,
 } from '@reaatech/agent-mesh';
 
