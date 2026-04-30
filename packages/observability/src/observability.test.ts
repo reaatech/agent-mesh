@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { logger, METRIC_NAMES, AUDIT_EVENTS } from './index.js';
+import { describe, expect, it } from 'vitest';
+import { AUDIT_EVENTS, METRIC_NAMES, logger } from './index.js';
 
 describe('@reaatech/agent-mesh-observability', () => {
   it('should export logger', () => {

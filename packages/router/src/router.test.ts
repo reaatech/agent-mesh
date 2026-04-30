@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { mcpClientFactory, buildTurnEntry, shouldCloseSession } from './index.js';
+import { describe, expect, it } from 'vitest';
+import { buildTurnEntry, mcpClientFactory, shouldCloseSession } from './index.js';
 
 describe('@reaatech/agent-mesh-router', () => {
   it('should export client factory', () => {

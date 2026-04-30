@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { AgentConfigSchema, AgentRegistrySchema } from './index.js';
 
 describe('@reaatech/agent-mesh-registry', () => {
@@ -19,8 +19,28 @@ describe('@reaatech/agent-mesh-registry', () => {
 
   it('should enforce exactly one default agent', () => {
     const agents = [
-      { agent_id: 'a', display_name: 'A', description: '...', endpoint: 'https://a.example.com', type: 'mcp' as const, is_default: true, confidence_threshold: 0, clarification_required: false, examples: ['x'] },
-      { agent_id: 'b', display_name: 'B', description: '...', endpoint: 'https://b.example.com', type: 'mcp' as const, is_default: true, confidence_threshold: 0, clarification_required: false, examples: ['y'] },
+      {
+        agent_id: 'a',
+        display_name: 'A',
+        description: '...',
+        endpoint: 'https://a.example.com',
+        type: 'mcp' as const,
+        is_default: true,
+        confidence_threshold: 0,
+        clarification_required: false,
+        examples: ['x'],
+      },
+      {
+        agent_id: 'b',
+        display_name: 'B',
+        description: '...',
+        endpoint: 'https://b.example.com',
+        type: 'mcp' as const,
+        is_default: true,
+        confidence_threshold: 0,
+        clarification_required: false,
+        examples: ['y'],
+      },
     ];
     const result = AgentRegistrySchema.safeParse(agents);
     expect(result.success).toBe(false);

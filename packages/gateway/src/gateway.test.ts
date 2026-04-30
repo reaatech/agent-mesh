@@ -1,5 +1,10 @@
-import { describe, it, expect } from 'vitest';
-import { clearAuthCache, clearRateLimitBuckets, clearProfileCache, EmployeeNotFoundError } from './index.js';
+import { describe, expect, it } from 'vitest';
+import {
+  EmployeeNotFoundError,
+  clearAuthCache,
+  clearProfileCache,
+  clearRateLimitBuckets,
+} from './index.js';
 
 describe('@reaatech/agent-mesh-gateway', () => {
   it('should export auth cache clear', () => {

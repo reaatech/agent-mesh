@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { SERVICE_NAME, SERVICE_VERSION, IncomingRequestSchema } from './index.js';
+import { describe, expect, it } from 'vitest';
+import { IncomingRequestSchema, SERVICE_NAME, SERVICE_VERSION } from './index.js';
 
 describe('@reaatech/agent-mesh', () => {
   it('should export constants', () => {
