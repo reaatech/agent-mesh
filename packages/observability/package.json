@@ -1,0 +1,58 @@
+{
+  "name": "@reaatech/agent-mesh-observability",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Observability layer for agent-mesh (logging, metrics, tracing, audit)",
+  "license": "MIT",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@reaatech/agent-mesh": "workspace:*",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/exporter-metrics-otlp-grpc": "^0.52.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.52.0",
+    "@opentelemetry/instrumentation-express": "^0.47.0",
+    "@opentelemetry/instrumentation-http": "^0.52.0",
+    "@opentelemetry/resources": "^1.25.1",
+    "@opentelemetry/sdk-metrics": "^1.17.0",
+    "@opentelemetry/sdk-node": "^0.52.0",
+    "@opentelemetry/sdk-trace-node": "^1.25.1",
+    "@opentelemetry/semantic-conventions": "^1.25.1",
+    "winston": "^3.11.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reaatech/agent-mesh.git",
+    "directory": "packages/observability"
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "@types/node": "^22.0.0"
+  },
+  "author": "Rick Somers <rick@reaatech.com> (https://reaatech.com)",
+  "homepage": "https://github.com/reaatech/agent-mesh/tree/main/packages/observability#readme",
+  "bugs": {
+    "url": "https://github.com/reaatech/agent-mesh/issues"
+  }
+}
