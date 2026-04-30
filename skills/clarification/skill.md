@@ -204,7 +204,7 @@ Log these events for compliance:
 
 ## Supported Languages
 
-The system supports clarification questions in 45+ languages:
+The system supports clarification questions in 58 languages:
 
 **Major languages (highest traffic):**
 - English (en), Spanish (es), French (fr), German (de), Italian (it)

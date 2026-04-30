@@ -1,5 +1,47 @@
 # agent-mesh — Architecture
 
+## Monorepo Package Map
+
+agent-mesh is organized as a pnpm monorepo. Each package is independently publishable
+under the `@reaatech` scope with dual ESM/CJS output.
+
+```
+packages/
+├── core/                  → @reaatech/agent-mesh              (types, schemas, config)
+├── observability/         → @reaatech/agent-mesh-observability (logging, metrics, audit)
+├── utils/                 → @reaatech/agent-mesh-utils         (circuit breaker, persistence)
+├── registry/              → @reaatech/agent-mesh-registry     (YAML loader, SIGHUP)
+├── session/               → @reaatech/agent-mesh-session       (Firestore session mgmt)
+├── classifier/            → @reaatech/agent-mesh-classifier    (Gemini intent classification)
+├── confidence/            → @reaatech/agent-mesh-confidence    (confidence gate, clarification)
+├── router/                → @reaatech/agent-mesh-router        (MCP dispatch, connection pool)
+├── gateway/               → @reaatech/agent-mesh-gateway       (Express middleware, handlers)
+└── mcp-server/            → @reaatech/agent-mesh-mcp-server    (orchestrator-as-MCP-server)
+examples/
+└── orchestrator/          → Reference deployment (wires all packages together)
+```
+
+**Dependency graph (→ means "depends on"):**
+```
+agent-mesh (core)
+ ├── observability ─────────────────────────────────────────────────────┐
+ ├── registry ──────────────────────────────────────────────────────────┤
+ ├── session ───────────────────────────────────────────────────────────┤
+ ├── classifier ──► confidence ─────────────────────────────────────────┤
+ ├── utils ─────────────────────────────────────────────────────────────┤
+ │                                                                       ▼
+ ├── session ──► gateway ──────────────────────────────────────────► mcp-server
+ │                                                                       │
+ └───────────────────────────────────────────────────────────────────────┤
+                                                                         ▼
+                                                                  examples/orchestrator
+```
+
+**Toolchain:** pnpm workspaces + Turbo (task orchestration) + Changesets (versioning) +
+tsup (dual CJS/ESM build) + Biome (lint/format) + Vitest (testing).
+
+---
+
 ## System Overview
 
 ```
@@ -13,7 +55,7 @@
 │         └───────────────────┼───────────────────┘                         │
 │                             │ HTTP/HTTPS                                   │
 └─────────────────────────────┼─────────────────────────────────────────────┘
-                              ▼
+                               ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                         Gateway Layer                                    │
 │  ┌──────────┐    ┌──────────────┐    ┌───────────────┐    ┌──────────┐  │
@@ -21,7 +63,7 @@
 │  │Middleware│    │  Middleware  │    │  Middleware   │    │Middleware│  │
 │  └──────────┘    └──────────────┘    └───────────────┘    └──────────┘  │
 └─────────────────────────────────────────────────────────────────────────┘
-                              ▼
+                               ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                        Orchestration Core                                │
 │  ┌──────────────────────────────────────────────────────────────────┐   │
@@ -39,7 +81,7 @@
 │  │  └─────────────────────────────────────────────────────────────┘  │   │
 │  └──────────────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────────────┘
-                              ▼
+                               ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                          Agent Pool                                      │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │
@@ -47,7 +89,7 @@
 │  │   (MCP)     │  │   (MCP)     │  │   (MCP)     │  │   Agent     │    │
 │  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘    │
 └─────────────────────────────────────────────────────────────────────────┘
-                              ▼
+                               ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                       Cross-Cutting Concerns                             │
 │  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐       │
@@ -101,6 +143,7 @@
 ### Gateway Layer
 
 The gateway handles all inbound HTTP traffic before it reaches the orchestration core.
+Implemented in `@reaatech/agent-mesh-gateway`.
 
 | Middleware | Order | Purpose |
 |------------|-------|---------|
@@ -113,9 +156,16 @@ The gateway handles all inbound HTTP traffic before it reaches the orchestration
 session bypass is a hard requirement — active sessions must skip classification
 entirely for mid-turn consistency.
 
+**Import example:**
+```typescript
+import { authMiddleware, rateLimiterMiddleware, tlsMiddleware,
+         healthCheck, deepHealthCheck, handleRequest } from '@reaatech/agent-mesh-gateway';
+```
+
 ### Agent Registry
 
-The registry is loaded from YAML files at startup and reloaded on `SIGHUP`:
+The registry is loaded from YAML files at startup and reloaded on `SIGHUP`.
+Implemented in `@reaatech/agent-mesh-registry`.
 
 ```
 agents/
@@ -144,7 +194,8 @@ validation fails, the old registry remains active — no service disruption.
 
 ### Classifier Service
 
-Uses Google Vertex AI Gemini Flash for intent classification:
+Uses Google Vertex AI Gemini Flash for intent classification.
+Implemented in `@reaatech/agent-mesh-classifier`.
 
 ```
 User Input → Prompt Builder → Gemini Flash → Structured Output
@@ -176,12 +227,20 @@ Output JSON: {agent_id, confidence, ambiguous, detected_language, intent_summary
 - Rate limit → exponential backoff with jitter
 - Invalid JSON → default agent with `fallback_reason: "json_parse_error"`
 
+**Import example:**
+```typescript
+import { classifierService } from '@reaatech/agent-mesh-classifier';
+
+const classification = await classifierService.classify(userInput, registryState.registry);
+```
+
 **Design Decision:** Gemini Flash is used for speed and cost. The pattern works
 with any LLM — swap the classifier implementation, keep the orchestration.
 
 ### Confidence Gate
 
-Evaluates classifier output against agent thresholds:
+Evaluates classifier output against agent thresholds.
+Implemented in `@reaatech/agent-mesh-confidence`.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -222,9 +281,16 @@ Evaluates classifier output against agent thresholds:
 **Clarification Question Generation:**
 - Uses Gemini Flash (same model as classifier)
 - Localized to user's detected language
-- 45+ language fallback questions pre-translated
+- 58 language fallback questions pre-translated
 - LRU cache with 5-minute TTL
 - Deferred cache clear on SIGHUP (wait for active requests)
+
+**Import example:**
+```typescript
+import { evaluateConfidenceGate } from '@reaatech/agent-mesh-confidence';
+
+const decision = evaluateConfidenceGate(classification, registry, bypassClassifier);
+```
 
 **Design Decision:** Clarification is generated by Gemini (not templates) because
 it produces more natural, context-aware questions. The fallback questions ensure
@@ -232,7 +298,8 @@ users always see localized text even if Gemini fails.
 
 ### Circuit Breaker
 
-Per-agent circuit breaker prevents cascading failures:
+Per-agent circuit breaker prevents cascading failures.
+Implemented in `@reaatech/agent-mesh-utils`.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -295,6 +362,12 @@ Per-agent circuit breaker prevents cascading failures:
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
+**Import example:**
+```typescript
+import { circuitBreaker } from '@reaatech/agent-mesh-utils';
+import { startCircuitBreakerPersistence, stopCircuitBreakerPersistence } from '@reaatech/agent-mesh-utils';
+```
+
 **Leader Election:**
 - Lease-based approach with periodic renewal
 - Fencing tokens prevent network partition issues
@@ -302,12 +375,12 @@ Per-agent circuit breaker prevents cascading failures:
 - Followers maintain in-memory state only
 
 **Design Decision:** Leader election adds complexity but is necessary for
-cross-instance consistency without a central coordinator. The lease-based
-approach handles instance failures gracefully.
+cross-instance consistency without a central coordinator.
 
 ### Session Management
 
-Firestore-backed session storage with 30-minute sliding TTL:
+Firestore-backed session storage with 30-minute sliding TTL.
+Implemented in `@reaatech/agent-mesh-session`.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -336,6 +409,12 @@ Firestore-backed session storage with 30-minute sliding TTL:
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
+**Import example:**
+```typescript
+import { createSession, getActiveSession, appendTurn,
+         closeSession, sessionMiddleware } from '@reaatech/agent-mesh-session';
+```
+
 **Session Bypass Middleware:**
 ```
 Request → Session Middleware → Active session found?
@@ -359,7 +438,8 @@ re-classified. This ensures conversational consistency and reduces latency.
 
 ### MCP Router
 
-Dispatches requests to agents via MCP StreamableHTTP:
+Dispatches requests to agents via MCP StreamableHTTP.
+Implemented in `@reaatech/agent-mesh-router`.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -381,6 +461,13 @@ Dispatches requests to agents via MCP StreamableHTTP:
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
+**Import example:**
+```typescript
+import { dispatchToAgent, mcpClientFactory } from '@reaatech/agent-mesh-router';
+
+const response = await dispatchToAgent(agent, { sessionId, employeeId, ... });
+```
+
 **Timeout Strategy:**
 - Default: 30 seconds
 - Configurable per-agent via environment variable
@@ -390,6 +477,34 @@ Dispatches requests to agents via MCP StreamableHTTP:
 **Design Decision:** Single attempt (no retry) for idempotency. Agents should
 handle their own retries for transient failures. The orchestrator retries only
 on clearly transient errors (network timeouts, 503s).
+
+### MCP Server Layer
+
+Exposes the orchestrator as an MCP-compliant agent.
+Implemented in `@reaatech/agent-mesh-mcp-server`.
+
+Provides JSON-RPC 2.0 routing with three tools:
+- `handle_message` — route user messages through the full orchestrator pipeline
+- `get_session_status` — query session state by ID
+- `list_agents` — enumerate all registered agents
+
+Also provides SSE transport for legacy MCP client compatibility.
+
+**Import example:**
+```typescript
+import { mcpMiddleware, sseHandler, messageHandler } from '@reaatech/agent-mesh-mcp-server';
+```
+
+### Observability Layer
+
+Structured logging, metrics, and audit events.
+Implemented in `@reaatech/agent-mesh-observability`.
+
+```typescript
+import { logger, createChildLogger } from '@reaatech/agent-mesh-observability';
+import { recordAgentDispatchDuration } from '@reaatech/agent-mesh-observability';
+import { logAgentRouted, logCircuitBreakerChange } from '@reaatech/agent-mesh-observability';
+```
 
 ---
 
@@ -435,17 +550,45 @@ Agent endpoint URLs are validated to reject:
 This validation runs regardless of environment (dev or prod) to catch
 misconfigurations early.
 
-### Prompt-Injection Defense
+---
 
-The gateway sanitizes string inputs for known injection patterns:
-- `<script>` tags and variants
-- `javascript:` URLs
-- `on*` event handlers
-- `<iframe>` injection
-- Unicode-based obfuscation
+## Build & Toolchain
 
-**Limitation:** This is best-effort. Agents handling sensitive operations
-should implement additional validation.
+### Build Pipeline
+
+```
+pnpm install       → pnpm build (turbo run build)
+                         │
+                 ┌───────┴────────┐
+                 │  tsup per-pkg  │
+                 │  CJS + ESM +   │
+                 │  DTS output    │
+                 └───────┬────────┘
+                         │
+               packages/*/dist/
+               ├── index.js     (ESM)
+               ├── index.cjs    (CJS)
+               ├── index.d.ts   (types ESM)
+               └── index.d.cts  (types CJS)
+```
+
+### Type Checking
+
+Root `tsconfig.typecheck.json` provides path aliases for cross-package type
+resolution without requiring a full build:
+
+```bash
+pnpm typecheck    # tsc --noEmit -p tsconfig.typecheck.json
+```
+
+### Quality Gates
+
+```bash
+pnpm lint         # biome check .
+pnpm format       # biome format --write .
+pnpm typecheck    # tsc --noEmit -p tsconfig.typecheck.json
+pnpm test         # turbo run test (vitest)
+```
 
 ---
 
@@ -582,6 +725,5 @@ PII is automatically redacted from all log fields.
 ## References
 
 - **AGENTS.md** — Agent development guide
-- **DEV_PLAN.md** — Development checklist
 - **README.md** — Quick start and overview
 - **MCP Specification** — https://modelcontextprotocol.io/

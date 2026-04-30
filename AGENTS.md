@@ -23,6 +23,28 @@ and SREs deploying agent infrastructure at scale.
 
 ---
 
+## Monorepo Structure
+
+agent-mesh is organized as a pnpm monorepo with 10 packages published under the
+`@reaatech` scope, plus a reference deployment example.
+
+| Package | npm Name | Purpose |
+|---------|----------|---------|
+| `packages/core` | [`@reaatech/agent-mesh`](https://www.npmjs.com/package/@reaatech/agent-mesh) | Core domain types, Zod schemas, env config, constants |
+| `packages/registry` | [`@reaatech/agent-mesh-registry`](https://www.npmjs.com/package/@reaatech/agent-mesh-registry) | Agent YAML loader, SIGHUP hot-reload |
+| `packages/session` | [`@reaatech/agent-mesh-session`](https://www.npmjs.com/package/@reaatech/agent-mesh-session) | Firestore-backed multi-turn session management |
+| `packages/classifier` | [`@reaatech/agent-mesh-classifier`](https://www.npmjs.com/package/@reaatech/agent-mesh-classifier) | Gemini Flash intent classification |
+| `packages/confidence` | [`@reaatech/agent-mesh-confidence`](https://www.npmjs.com/package/@reaatech/agent-mesh-confidence) | Confidence-gated routing decision tree |
+| `packages/router` | [`@reaatech/agent-mesh-router`](https://www.npmjs.com/package/@reaatech/agent-mesh-router) | MCP-based agent dispatch |
+| `packages/gateway` | [`@reaatech/agent-mesh-gateway`](https://www.npmjs.com/package/@reaatech/agent-mesh-gateway) | Express middleware and request handler |
+| `packages/mcp-server` | [`@reaatech/agent-mesh-mcp-server`](https://www.npmjs.com/package/@reaatech/agent-mesh-mcp-server) | MCP server exposing orchestrator |
+| `packages/utils` | [`@reaatech/agent-mesh-utils`](https://www.npmjs.com/package/@reaatech/agent-mesh-utils) | Circuit breaker with Firestore persistence |
+| `packages/observability` | [`@reaatech/agent-mesh-observability`](https://www.npmjs.com/package/@reaatech/agent-mesh-observability) | Logging, metrics, tracing, audit |
+
+**Toolchain:** pnpm workspaces + Turbo + Changesets + tsup + Biome + Vitest.
+
+---
+
 ## Architecture Overview
 
 ```
@@ -55,15 +77,18 @@ and SREs deploying agent infrastructure at scale.
 
 ### Key Components
 
-| Component | Location | Purpose |
-|-----------|----------|---------|
-| **Agent Registry** | `src/registry/` | YAML agent definitions with SIGHUP hot-reload |
-| **Rate Limiter** | `src/gateway/rateLimiter.middleware.ts` | Token bucket per-client rate limiting |
-| **Session Manager** | `src/session/` | Firestore-backed multi-turn state |
-| **Classifier** | `src/classifier/` | Gemini Flash intent classification |
-| **Confidence Gate** | `src/confidence/` | Route/clarify/fallback decision tree |
-| **Circuit Breaker** | `src/utils/circuitBreaker.ts` | Per-agent resilience pattern |
-| **MCP Router** | `src/router/` | Agent dispatch via MCP protocol |
+| Component | Package | Purpose |
+|-----------|---------|---------|
+| **Agent Registry** | `@reaatech/agent-mesh-registry` | YAML agent definitions with SIGHUP hot-reload |
+| **Rate Limiter** | `@reaatech/agent-mesh-gateway` | Token bucket per-client rate limiting |
+| **Session Manager** | `@reaatech/agent-mesh-session` | Firestore-backed multi-turn state |
+| **Classifier** | `@reaatech/agent-mesh-classifier` | Gemini Flash intent classification |
+| **Confidence Gate** | `@reaatech/agent-mesh-confidence` | Route/clarify/fallback decision tree |
+| **Circuit Breaker** | `@reaatech/agent-mesh-utils` | Per-agent resilience pattern |
+| **MCP Router** | `@reaatech/agent-mesh-router` | Agent dispatch via MCP protocol |
+| **Gateway** | `@reaatech/agent-mesh-gateway` | Express middleware, entry handler, auth |
+| **MCP Server** | `@reaatech/agent-mesh-mcp-server` | Exposes orchestrator as MCP-compliant agent |
+| **Observability** | `@reaatech/agent-mesh-observability` | Winston logging, OTel tracing/metrics, audit |
 
 ---
 
@@ -145,7 +170,7 @@ examples:
 
 3. Send `SIGHUP` to the orchestrator process to hot-reload:
    ```bash
-   kill -HUP $(pgrep -f orchestrator-core)
+   kill -HUP $(pgrep -f orchestrator)
    ```
 
 4. Verify the agent is loaded:
@@ -209,14 +234,17 @@ Agents must return a response matching this schema:
 }
 ```
 
-The orchestrator validates the response against this Zod schema:
+The orchestrator validates the response against this Zod schema (from `@reaatech/agent-mesh`):
 
 ```typescript
-const AgentResponseSchema = z.object({
-  content: z.string().min(1, 'content is required'),
-  workflow_complete: z.boolean(),
-  workflow_state: z.record(z.string(), z.unknown()).optional(),
-});
+import { AgentResponseSchema } from '@reaatech/agent-mesh';
+
+// Schema shape:
+// z.object({
+//   content: z.string().min(1, 'content is required'),
+//   workflow_complete: z.boolean(),
+//   workflow_state: z.record(z.string(), z.unknown()).optional(),
+// });
 ```
 
 ### Response Fields
@@ -479,6 +507,8 @@ The orchestrator logs all events with `request_id` and `service` context. When
 building agents, follow the same pattern:
 
 ```typescript
+import { logger } from '@reaatech/agent-mesh-observability';
+
 logger.info({
   request_id: context.requestId,
   agent_id: 'my-agent',
@@ -526,7 +556,7 @@ The orchestrator includes contract tests that validate:
 Run these tests to ensure your agent is compatible:
 
 ```bash
-npm run test:contract
+pnpm test
 ```
 
 ### Agent Testing
@@ -535,7 +565,7 @@ Test your agent's MCP server independently:
 
 ```typescript
 import { describe, it, expect } from 'vitest';
-import { handle_message } from '../src/tools/handle_message.js';
+import { AgentResponseSchema } from '@reaatech/agent-mesh';
 
 describe('my-agent', () => {
   it('should handle password reset request', async () => {
@@ -573,7 +603,7 @@ describe('Multi-agent routing', () => {
     });
 
     const result = await response.json();
-    expect(result.agentId).toBe('my-agent');
+    expect(result.agent_id).toBe('my-agent');
   });
 });
 ```
@@ -616,18 +646,29 @@ describe('Multi-agent routing', () => {
 | `MCP_REQUEST_TIMEOUT_MS` | no | `30000` | MCP request timeout (ms) |
 | `MCP_MAX_RETRIES` | no | `3` | Max retries for failed MCP requests |
 
+### Local Development
+
+```bash
+git clone https://github.com/reaatech/agent-mesh.git
+cd agent-mesh
+pnpm install
+pnpm build
+pnpm --filter @reaatech/agent-mesh-orchestrator build
+GOOGLE_CLOUD_PROJECT=my-project API_KEY=dev-key node examples/orchestrator/dist/index.js
+```
+
 ### Docker
 
 ```bash
-docker build -t my-agent .
-docker run -p 8081:8080 -e GOOGLE_CLOUD_PROJECT=my-project my-agent
+docker build -t agent-mesh .
+docker run -p 8080:8080 -e GOOGLE_CLOUD_PROJECT=my-project agent-mesh
 ```
 
 ### GCP Cloud Run
 
 ```bash
-gcloud run deploy my-agent \
-  --image gcr.io/my-project/my-agent:latest \
+gcloud run deploy agent-mesh \
+  --image gcr.io/my-project/agent-mesh:latest \
   --platform managed \
   --region us-central1 \
   --allow-unauthenticated \
@@ -680,7 +721,7 @@ Before deploying an agent to production:
 ## References
 
 - **ARCHITECTURE.md** — Orchestrator system design deep dive
-- **DEV_PLAN.md** — Development checklist for building the orchestrator
 - **README.md** — Quick start and overview
 - **MCP Specification** — https://modelcontextprotocol.io/
 - **skills/** — Skill definitions for orchestrator capabilities
+```
