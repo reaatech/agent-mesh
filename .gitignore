@@ -52,6 +52,15 @@ temp/
 *.tfstate.backup
 .crashshots/
 
+# Stray build output in src/ (from misconfigured tsup)
+packages/*/src/**/*.js
+packages/*/src/**/*.js.map
+packages/*/src/**/*.d.ts
+packages/*/src/**/*.d.ts.map
+
+# Turbo cache
+.turbo/
+
 # Docker
 docker-compose.override.yml
 

@@ -6,80 +6,344 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 22
+
 jobs:
-  build:
+  install:
+    name: Install Dependencies
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-          cache-dependency-path: 'package-lock.json'
-      - run: npm ci
-      - name: Build
-        run: npm run build
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Save pnpm store
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/pnpm/store
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+
+  audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Audit dependencies
+        run: pnpm audit --audit-level high
+
+  format:
+    name: Code Format
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/pnpm/store
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Check formatting
+        run: pnpm biome format --write . && git diff --exit-code
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/pnpm/store
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Lint
+        run: pnpm lint
+
+  typecheck:
+    name: Type Check
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/pnpm/store
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Type check
+        run: pnpm typecheck
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/pnpm/store
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Re-link workspace packages
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Build packages
+        run: pnpm build
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: dist
-          path: dist/
-
-  code-quality:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-          cache-dependency-path: 'package-lock.json'
-      - run: npm ci
-      - name: Run npm audit
-        run: npm audit --audit-level=high
-      - name: Run ESLint
-        run: npm run lint
-      - name: Run TypeScript type check
-        run: npm run typecheck
-      - name: Check formatting
-        run: npm run format:check
+          name: build-dist
+          path: |
+            packages/*/dist
+            examples/*/dist
+          retention-days: 1
 
   test:
+    name: Test
     runs-on: ubuntu-latest
-    needs: [build, code-quality]
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [20, 22]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-          cache-dependency-path: 'package-lock.json'
-      - run: npm ci
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/pnpm/store
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Re-link workspace packages
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-dist
+
+      - name: Run tests
+        run: pnpm test
+
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/pnpm/store
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Re-link workspace packages
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-dist
+
       - name: Run tests with coverage
-        run: npm run test:coverage
-      - name: Upload coverage to GitHub
+        run: pnpm test:coverage
+
+      - name: Upload coverage reports
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report
-          path: coverage/
+          name: coverage-reports
+          path: |
+            packages/*/coverage
+          retention-days: 7
+
+      - name: Post coverage summary
+        run: |
+          echo '## Test Coverage Summary' >> $GITHUB_STEP_SUMMARY
+          echo '| Package | Lines | Functions | Branches |' >> $GITHUB_STEP_SUMMARY
+          echo '|---------|-------|-----------|----------|' >> $GITHUB_STEP_SUMMARY
+          for pkg in packages/*/coverage/coverage-summary.json; do
+            if [ -f "$pkg" ]; then
+              name=$(basename $(dirname $(dirname "$pkg")))
+              lines=$(jq -r '.total.lines.pct // "N/A"' "$pkg")
+              funcs=$(jq -r '.total.functions.pct // "N/A"' "$pkg")
+              branches=$(jq -r '.total.branches.pct // "N/A"' "$pkg")
+              echo "| $name | $lines% | $funcs% | $branches% |" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
 
   docker-build:
+    name: Docker Build
     runs-on: ubuntu-latest
-    needs: [build, code-quality]
     steps:
-      - uses: actions/checkout@v4
-      - name: Build Docker image
-        run: docker build -t agent-mesh:test .
-      - name: Check image size
-        run: |
-          SIZE=$(docker images agent-mesh:test --format "{{.Size}}")
-          echo "Image size: $SIZE"
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  required-checks:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: agent-mesh:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  docker-compose:
+    name: Docker Compose
     runs-on: ubuntu-latest
-    needs: [build, code-quality, test, docker-build]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Docker Compose
+        run: docker compose config
+
+  all-checks:
+    name: All Checks Passed
+    runs-on: ubuntu-latest
+    needs: [audit, format, lint, typecheck, build, test, coverage, docker-build, docker-compose]
     if: always()
     steps:
-      - name: Check all required jobs
-        if: needs.build.result != 'success' || needs.code-quality.result != 'success' || needs.test.result != 'success' || needs.docker-build.result != 'success'
-        run: exit 1
+      - name: Check all jobs passed
+        run: |
+          check() {
+            if [ "$1" != "success" ]; then
+              echo "$2 did not succeed: $1"
+              exit 1
+            fi
+          }
+          check '${{ needs.audit.result }}' 'Security Audit'
+          check '${{ needs.format.result }}' 'Code Format'
+          check '${{ needs.lint.result }}' 'Lint'
+          check '${{ needs.typecheck.result }}' 'Type Check'
+          check '${{ needs.build.result }}' 'Build'
+          check '${{ needs.test.result }}' 'Test'
+          check '${{ needs.coverage.result }}' 'Coverage'
+          check '${{ needs.docker-build.result }}' 'Docker Build'
+          check '${{ needs.docker-compose.result }}' 'Docker Compose'
+          echo "All checks passed!"
