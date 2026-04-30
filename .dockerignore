@@ -1,28 +1,21 @@
 # Dependencies
-node_modules
-npm-debug.log
+node_modules/
 
 # Build output (rebuilt in container)
-dist
+dist/
+.turbo/
 
-# Tests
-tests
-*.test.ts
-*.spec.ts
-
-# Docs
-docs
-*.md
-!package.json
-!package-lock.json
+# Old source (migrated to packages/)
+src/
+tests/
 
 # Git
-.git
+.git/
 .gitignore
 
 # IDE
-.idea
-.vscode
+.idea/
+.vscode/
 *.swp
 *.swo
 
@@ -36,7 +29,15 @@ Thumbs.db
 !.env.example
 
 # Coverage
-coverage
+coverage/
 
 # Terraform
-infra
+infra/
+
+# Docs
+docs/
+*.md
+!README.md
+
+# CI
+.github/
