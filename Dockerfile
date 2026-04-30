@@ -17,6 +17,9 @@ COPY .npmrc ./
 COPY packages/ ./packages/
 COPY examples/ ./examples/
 
+# Copy agent configs
+COPY agents/ ./agents/
+
 # Install dependencies
 RUN pnpm install --frozen-lockfile
 
