@@ -1,13 +1,13 @@
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc';
 import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
-import { Resource } from '@opentelemetry/resources';
+import { resourceFromAttributes } from '@opentelemetry/resources';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
 import { env } from '@reaatech/agent-mesh';
 import { SERVICE_NAME, SERVICE_VERSION } from '@reaatech/agent-mesh';
 
-const resource = new Resource({
+const resource = resourceFromAttributes({
   [SemanticResourceAttributes.SERVICE_NAME]: SERVICE_NAME,
   [SemanticResourceAttributes.SERVICE_VERSION]: SERVICE_VERSION,
   [SemanticResourceAttributes.SERVICE_INSTANCE_ID]: process.env.HOSTNAME || 'unknown',
