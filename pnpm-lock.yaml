@@ -142,7 +142,7 @@ importers:
         version: 25.6.0
       tsup:
         specifier: ^8.4.0
-        version: 8.5.1(postcss@8.5.13)(typescript@6.0.3)(yaml@2.8.3)
+        version: 8.5.1(postcss@8.5.14)(typescript@6.0.3)(yaml@2.8.3)
 
   packages/confidence:
     dependencies:
@@ -164,7 +164,7 @@ importers:
         version: 25.6.0
       tsup:
         specifier: ^8.4.0
-        version: 8.5.1(postcss@8.5.13)(typescript@6.0.3)(yaml@2.8.3)
+        version: 8.5.1(postcss@8.5.14)(typescript@6.0.3)(yaml@2.8.3)
 
   packages/core:
     dependencies:
@@ -177,7 +177,7 @@ importers:
         version: 25.6.0
       tsup:
         specifier: ^8.4.0
-        version: 8.5.1(postcss@8.5.13)(typescript@6.0.3)(yaml@2.8.3)
+        version: 8.5.1(postcss@8.5.14)(typescript@6.0.3)(yaml@2.8.3)
 
   packages/gateway:
     dependencies:
@@ -223,7 +223,7 @@ importers:
         version: 25.6.0
       tsup:
         specifier: ^8.4.0
-        version: 8.5.1(postcss@8.5.13)(typescript@6.0.3)(yaml@2.8.3)
+        version: 8.5.1(postcss@8.5.14)(typescript@6.0.3)(yaml@2.8.3)
 
   packages/mcp-server:
     dependencies:
@@ -257,7 +257,7 @@ importers:
         version: 25.6.0
       tsup:
         specifier: ^8.4.0
-        version: 8.5.1(postcss@8.5.13)(typescript@6.0.3)(yaml@2.8.3)
+        version: 8.5.1(postcss@8.5.14)(typescript@6.0.3)(yaml@2.8.3)
 
   packages/observability:
     dependencies:
@@ -277,8 +277,8 @@ importers:
         specifier: ^0.52.0
         version: 0.52.1(@opentelemetry/api@1.9.1)
       '@opentelemetry/resources':
-        specifier: ^1.25.1
-        version: 1.30.1(@opentelemetry/api@1.9.1)
+        specifier: ^2.7.1
+        version: 2.7.1(@opentelemetry/api@1.9.1)
       '@opentelemetry/sdk-metrics':
         specifier: ^1.17.0
         version: 1.30.1(@opentelemetry/api@1.9.1)
@@ -303,7 +303,7 @@ importers:
         version: 25.6.0
       tsup:
         specifier: ^8.4.0
-        version: 8.5.1(postcss@8.5.13)(typescript@6.0.3)(yaml@2.8.3)
+        version: 8.5.1(postcss@8.5.14)(typescript@6.0.3)(yaml@2.8.3)
 
   packages/registry:
     dependencies:
@@ -328,7 +328,7 @@ importers:
         version: 25.6.0
       tsup:
         specifier: ^8.4.0
-        version: 8.5.1(postcss@8.5.13)(typescript@6.0.3)(yaml@2.8.3)
+        version: 8.5.1(postcss@8.5.14)(typescript@6.0.3)(yaml@2.8.3)
 
   packages/router:
     dependencies:
@@ -356,7 +356,7 @@ importers:
         version: 25.6.0
       tsup:
         specifier: ^8.4.0
-        version: 8.5.1(postcss@8.5.13)(typescript@6.0.3)(yaml@2.8.3)
+        version: 8.5.1(postcss@8.5.14)(typescript@6.0.3)(yaml@2.8.3)
 
   packages/session:
     dependencies:
@@ -384,7 +384,7 @@ importers:
         version: 25.6.0
       tsup:
         specifier: ^8.4.0
-        version: 8.5.1(postcss@8.5.13)(typescript@6.0.3)(yaml@2.8.3)
+        version: 8.5.1(postcss@8.5.14)(typescript@6.0.3)(yaml@2.8.3)
 
   packages/utils:
     dependencies:
@@ -406,7 +406,7 @@ importers:
         version: 25.6.0
       tsup:
         specifier: ^8.4.0
-        version: 8.5.1(postcss@8.5.13)(typescript@6.0.3)(yaml@2.8.3)
+        version: 8.5.1(postcss@8.5.14)(typescript@6.0.3)(yaml@2.8.3)
 
 packages:
 
@@ -888,6 +888,12 @@ packages:
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
 
+  '@opentelemetry/core@2.7.1':
+    resolution: {integrity: sha512-QAqIj32AtK6+pEVNG7EOVxHdE06RP+FM5qpiEJ4RtDcFIqKUZHYhl7/7UY5efhwmwNAg7j8QbJVBLxMerc0+gw==}
+    engines: {node: ^18.19.0 || >=20.6.0}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.0.0 <1.10.0'
+
   '@opentelemetry/exporter-metrics-otlp-grpc@0.52.1':
     resolution: {integrity: sha512-CE0f1IEE1GQj8JWl/BxKvKwx9wBTLR09OpPQHaIs5LGBw3ODu8ek5kcbrHPNsFYh/pWh+pcjbZQoxq3CqvQVnA==}
     engines: {node: '>=14'}
@@ -1001,6 +1007,12 @@ packages:
     engines: {node: '>=14'}
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
+
+  '@opentelemetry/resources@2.7.1':
+    resolution: {integrity: sha512-DeT6KKolmC4e/dRQvMQ/RwlnzhaqeiFOXY5ngoOPJ07GgVVKxZOg9EcrNZb5aTzUn+iCrJldAgOfQm1O/QfPAQ==}
+    engines: {node: ^18.19.0 || >=20.6.0}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.3.0 <1.10.0'
 
   '@opentelemetry/sdk-logs@0.52.1':
     resolution: {integrity: sha512-MBYh+WcPPsN8YpRHRmK1Hsca9pVlyyKd4BxOC4SsgHACnl/bPp4Cri9hWhVm5+2tiQ9Zf4qSc1Jshw9tOLGWQA==}
@@ -1359,8 +1371,8 @@ packages:
     cpu: [arm64]
     os: [win32]
 
-  '@tybys/wasm-util@0.10.1':
-    resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
+  '@tybys/wasm-util@0.10.2':
+    resolution: {integrity: sha512-RoBvJ2X0wuKlWFIjrwffGw1IqZHKQqzIchKaadZZfnNpsAYp2mM0h36JtPCjNDAHGgYez/15uMBpfGwchhiMgg==}
 
   '@types/body-parser@1.19.6':
     resolution: {integrity: sha512-HLFeCYgz89uk22N5Qg3dvGvsv46B8GLvKKo1zKG4NybA8U2DiEO3w9lqGg29t/tfLRJpJ6iQxnVw4OnB7MoM9g==}
@@ -2370,8 +2382,8 @@ packages:
   mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
 
-  nanoid@3.3.11:
-    resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}
+  nanoid@3.3.12:
+    resolution: {integrity: sha512-ZB9RH/39qpq5Vu6Y+NmUaFhQR6pp+M2Xt76XBnEwDaGcVAqhlvxrl3B2bKS5D3NH3QR76v3aSrKaF/Kiy7lEtQ==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
@@ -2536,8 +2548,8 @@ packages:
       yaml:
         optional: true
 
-  postcss@8.5.13:
-    resolution: {integrity: sha512-qif0+jGGZoLWdHey3UFHHWP0H7Gbmsk8T5VEqyYFbWqPr1XqvLGBbk/sl8V5exGmcYJklJOhOQq1pV9IcsiFag==}
+  postcss@8.5.14:
+    resolution: {integrity: sha512-SoSL4+OSEtR99LHFZQiJLkT59C5B1amGO1NzTwj7TT1qCUgUO6hxOvzkOYxD+vMrXBM3XJIKzokoERdqQq/Zmg==}
     engines: {node: ^10 || ^12 || >=14}
 
   prettier@2.8.8:
@@ -3546,7 +3558,7 @@ snapshots:
     dependencies:
       '@emnapi/core': 1.10.0
       '@emnapi/runtime': 1.10.0
-      '@tybys/wasm-util': 0.10.1
+      '@tybys/wasm-util': 0.10.2
     optional: true
 
   '@noble/hashes@1.8.0': {}
@@ -3590,6 +3602,11 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/semantic-conventions': 1.28.0
+
+  '@opentelemetry/core@2.7.1(@opentelemetry/api@1.9.1)':
+    dependencies:
+      '@opentelemetry/api': 1.9.1
+      '@opentelemetry/semantic-conventions': 1.40.0
 
   '@opentelemetry/exporter-metrics-otlp-grpc@0.52.1(@opentelemetry/api@1.9.1)':
     dependencies:
@@ -3747,6 +3764,12 @@ snapshots:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.1)
       '@opentelemetry/semantic-conventions': 1.28.0
+
+  '@opentelemetry/resources@2.7.1(@opentelemetry/api@1.9.1)':
+    dependencies:
+      '@opentelemetry/api': 1.9.1
+      '@opentelemetry/core': 2.7.1(@opentelemetry/api@1.9.1)
+      '@opentelemetry/semantic-conventions': 1.40.0
 
   '@opentelemetry/sdk-logs@0.52.1(@opentelemetry/api@1.9.1)':
     dependencies:
@@ -4012,7 +4035,7 @@ snapshots:
   '@turbo/windows-arm64@2.9.6':
     optional: true
 
-  '@tybys/wasm-util@0.10.1':
+  '@tybys/wasm-util@0.10.2':
     dependencies:
       tslib: 2.8.1
     optional: true
@@ -5063,7 +5086,7 @@ snapshots:
       object-assign: 4.1.1
       thenify-all: 1.6.0
 
-  nanoid@3.3.11: {}
+  nanoid@3.3.12: {}
 
   negotiator@1.0.0: {}
 
@@ -5172,16 +5195,16 @@ snapshots:
       mlly: 1.8.2
       pathe: 2.0.3
 
-  postcss-load-config@6.0.1(postcss@8.5.13)(yaml@2.8.3):
+  postcss-load-config@6.0.1(postcss@8.5.14)(yaml@2.8.3):
     dependencies:
       lilconfig: 3.1.3
     optionalDependencies:
-      postcss: 8.5.13
+      postcss: 8.5.14
       yaml: 2.8.3
 
-  postcss@8.5.13:
+  postcss@8.5.14:
     dependencies:
-      nanoid: 3.3.11
+      nanoid: 3.3.12
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
@@ -5564,7 +5587,7 @@ snapshots:
   tslib@2.8.1:
     optional: true
 
-  tsup@8.5.1(postcss@8.5.13)(typescript@6.0.3)(yaml@2.8.3):
+  tsup@8.5.1(postcss@8.5.14)(typescript@6.0.3)(yaml@2.8.3):
     dependencies:
       bundle-require: 5.1.0(esbuild@0.27.7)
       cac: 6.7.14
@@ -5575,7 +5598,7 @@ snapshots:
       fix-dts-default-cjs-exports: 1.0.1
       joycon: 3.1.1
       picocolors: 1.1.1
-      postcss-load-config: 6.0.1(postcss@8.5.13)(yaml@2.8.3)
+      postcss-load-config: 6.0.1(postcss@8.5.14)(yaml@2.8.3)
       resolve-from: 5.0.0
       rollup: 4.60.2
       source-map: 0.7.6
@@ -5584,7 +5607,7 @@ snapshots:
       tinyglobby: 0.2.16
       tree-kill: 1.2.2
     optionalDependencies:
-      postcss: 8.5.13
+      postcss: 8.5.14
       typescript: 6.0.3
     transitivePeerDependencies:
       - jiti
@@ -5627,7 +5650,7 @@ snapshots:
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.4
-      postcss: 8.5.13
+      postcss: 8.5.14
       rolldown: 1.0.0-rc.17
       tinyglobby: 0.2.16
     optionalDependencies:
