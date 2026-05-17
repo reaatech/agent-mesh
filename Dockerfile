@@ -6,8 +6,8 @@ FROM node:26-alpine AS builder
 
 WORKDIR /app
 
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@10.22.0 --activate
+# Install pnpm (corepack removed in Node 26)
+RUN npm install -g pnpm@10.22.0
 
 # Copy workspace config files
 COPY pnpm-workspace.yaml pnpm-lock.yaml package.json turbo.json tsconfig.json ./
@@ -38,8 +38,8 @@ RUN apk add --no-cache dumb-init
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
 
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@10.22.0 --activate
+# Install pnpm (corepack removed in Node 26)
+RUN npm install -g pnpm@10.22.0
 
 # Copy workspace config
 COPY --from=builder --chown=nodejs:nodejs /app/pnpm-workspace.yaml ./
