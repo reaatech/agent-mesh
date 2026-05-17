@@ -4,17 +4,16 @@
  */
 
 import './otel.js';
-import { MAX_REQUEST_BODY_SIZE, SERVICE_NAME, SERVICE_VERSION, env } from '@reaatech/agent-mesh';
+import { env, MAX_REQUEST_BODY_SIZE, SERVICE_NAME, SERVICE_VERSION } from '@reaatech/agent-mesh';
 import {
   authMiddleware,
   deepHealthCheck,
   handleRequest,
   healthCheck,
+  rateLimiterMiddleware,
+  tlsMiddleware,
 } from '@reaatech/agent-mesh-gateway';
-import { rateLimiterMiddleware } from '@reaatech/agent-mesh-gateway';
-import { tlsMiddleware } from '@reaatech/agent-mesh-gateway';
-import { mcpMiddleware } from '@reaatech/agent-mesh-mcp-server';
-import { messageHandler, sseHandler } from '@reaatech/agent-mesh-mcp-server';
+import { mcpMiddleware, messageHandler, sseHandler } from '@reaatech/agent-mesh-mcp-server';
 import { logger } from '@reaatech/agent-mesh-observability';
 import { initRegistry, setupSighupHandler } from '@reaatech/agent-mesh-registry';
 import {

@@ -4,8 +4,7 @@ import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
 import { resourceFromAttributes } from '@opentelemetry/resources';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
-import { env } from '@reaatech/agent-mesh';
-import { SERVICE_NAME, SERVICE_VERSION } from '@reaatech/agent-mesh';
+import { env, SERVICE_NAME, SERVICE_VERSION } from '@reaatech/agent-mesh';
 
 const resource = resourceFromAttributes({
   [SemanticResourceAttributes.SERVICE_NAME]: SERVICE_NAME,

@@ -1,21 +1,21 @@
-export { logger, createChildLogger } from './logger.js';
-export { initOtel, shutdownOtel } from './otel.js';
+export type { AuditEvent, AuditEventType } from './audit.js';
 export {
-  getMeterProvider,
-  getMeter,
-  recordSessionLookupDuration,
-  recordClarification,
-  recordAgentDispatchDuration,
-  recordAgentDispatchError,
-  METRIC_NAMES,
-  CIRCUIT_BREAKER_STATES,
-} from './metrics.js';
-export {
+  AUDIT_EVENTS,
+  logAgentRouted,
   logAuditEvent,
   logAuthRequest,
-  logAgentRouted,
   logCircuitBreakerChange,
   logSecurityEvent,
-  AUDIT_EVENTS,
 } from './audit.js';
-export type { AuditEvent, AuditEventType } from './audit.js';
+export { createChildLogger, logger } from './logger.js';
+export {
+  CIRCUIT_BREAKER_STATES,
+  getMeter,
+  getMeterProvider,
+  METRIC_NAMES,
+  recordAgentDispatchDuration,
+  recordAgentDispatchError,
+  recordClarification,
+  recordSessionLookupDuration,
+} from './metrics.js';
+export { initOtel, shutdownOtel } from './otel.js';

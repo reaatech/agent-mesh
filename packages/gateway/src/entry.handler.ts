@@ -1,22 +1,24 @@
 import crypto from 'node:crypto';
-import { HEALTH_CHECK_COLLECTION, SERVICE_NAME, SERVICE_VERSION } from '@reaatech/agent-mesh';
-import { env } from '@reaatech/agent-mesh';
 import {
   type AgentResponse,
   type ClassifierOutput,
+  env,
+  HEALTH_CHECK_COLLECTION,
   IncomingRequestSchema,
+  SERVICE_NAME,
+  SERVICE_VERSION,
 } from '@reaatech/agent-mesh';
 import { classifierService } from '@reaatech/agent-mesh-classifier';
 import { evaluateConfidenceGate } from '@reaatech/agent-mesh-confidence';
 import { logAgentRouted } from '@reaatech/agent-mesh-observability';
 import { registryState } from '@reaatech/agent-mesh-registry';
 import { dispatchToAgent } from '@reaatech/agent-mesh-router';
-import { getFirestore } from '@reaatech/agent-mesh-session';
 import {
   appendTurn,
   closeSession,
   createSession,
   getActiveSession,
+  getFirestore,
   updateWorkflowState,
 } from '@reaatech/agent-mesh-session';
 import type { Request, Response } from 'express';

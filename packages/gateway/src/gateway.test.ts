@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  EmployeeNotFoundError,
   clearAuthCache,
   clearProfileCache,
   clearRateLimitBuckets,
+  EmployeeNotFoundError,
 } from './index.js';
 
 describe('@reaatech/agent-mesh-gateway', () => {

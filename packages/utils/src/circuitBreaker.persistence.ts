@@ -1,5 +1,5 @@
-import { env } from '@reaatech/agent-mesh';
 import type { CircuitBreakerState, CircuitState } from '@reaatech/agent-mesh';
+import { env } from '@reaatech/agent-mesh';
 import { getFirestore } from '@reaatech/agent-mesh-session';
 import { circuitBreaker } from './circuitBreaker.js';
 

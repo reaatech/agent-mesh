@@ -65,6 +65,8 @@ export function tlsMiddleware(req: Request, res: Response, next: NextFunction): 
   });
 }
 
-export { httpsRedirect as httpsRedirectMiddleware };
-export { hstsHeader as hstsMiddleware };
-export { securityHeaders as securityHeadersMiddleware };
+export {
+  hstsHeader as hstsMiddleware,
+  httpsRedirect as httpsRedirectMiddleware,
+  securityHeaders as securityHeadersMiddleware,
+};

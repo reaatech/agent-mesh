@@ -1,16 +1,16 @@
 export { circuitBreaker } from './circuitBreaker.js';
 export {
-  isLeader,
+  clearLocalState,
   getLeaderId,
-  persistCircuitBreakerState,
-  loadCircuitBreakerState,
+  getLocalCircuitBreakerState,
+  isLeader,
   loadAllCircuitBreakerStates,
+  loadCircuitBreakerState,
+  persistCircuitBreakerState,
+  resetLeaderState,
   restoreCircuitBreakerStates,
+  setLocalCircuitBreakerState,
   startCircuitBreakerPersistence,
   stopCircuitBreakerPersistence,
   updateCircuitBreakerState,
-  getLocalCircuitBreakerState,
-  setLocalCircuitBreakerState,
-  clearLocalState,
-  resetLeaderState,
 } from './circuitBreaker.persistence.js';
