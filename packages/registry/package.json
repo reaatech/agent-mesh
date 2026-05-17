@@ -30,7 +30,7 @@
     "@reaatech/agent-mesh-observability": "workspace:*",
     "glob": "^11.0.0",
     "yaml": "^2.4.0",
-    "zod": "^4.3.6"
+    "zod": "^4.4.3"
   },
   "repository": {
     "type": "git",
