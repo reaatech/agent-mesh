@@ -128,8 +128,8 @@ importers:
   packages/classifier:
     dependencies:
       '@google-cloud/aiplatform':
-        specifier: ^4.0.0
-        version: 4.4.0
+        specifier: ^6.8.0
+        version: 6.8.0
       '@google-cloud/vertexai':
         specifier: ^1.0.0
         version: 1.12.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))
@@ -727,8 +727,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@google-cloud/aiplatform@4.4.0':
-    resolution: {integrity: sha512-7Bmh3kkM+pSiHfoHM/RwsA23I4ISjkwxiPw4XXuw8IfmINsmpKCL5eTMSOFHImOi02dCrDfIMCTLPNwhXkuuTA==}
+  '@google-cloud/aiplatform@6.8.0':
+    resolution: {integrity: sha512-uN1azwaREjQA26V+Wx8IsAFMBfNjtBYlQ+TKoNXnzEmQwGq097PIw3vaRQPSZHmJqiNYxJ1/BPZ6glCZBRNe+A==}
     engines: {node: '>=18'}
 
   '@google-cloud/firestore@8.6.0':
@@ -3320,7 +3320,7 @@ snapshots:
   '@esbuild/win32-x64@0.27.7':
     optional: true
 
-  '@google-cloud/aiplatform@4.4.0':
+  '@google-cloud/aiplatform@6.8.0':
     dependencies:
       google-gax: 5.0.6
     transitivePeerDependencies:
