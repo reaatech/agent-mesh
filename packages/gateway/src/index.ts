@@ -1,26 +1,26 @@
-export {
-  healthCheck,
-  deepHealthCheck,
-  handleRequest,
-  handleInternalRequest,
-} from './entry.handler.js';
 export { authMiddleware, clearAuthCache } from './auth.middleware.js';
 export {
-  rateLimiterMiddleware,
+  deepHealthCheck,
+  handleInternalRequest,
+  handleRequest,
+  healthCheck,
+} from './entry.handler.js';
+export {
   clearRateLimitBuckets,
   getBucketState,
   type RateLimitConfig,
+  rateLimiterMiddleware,
 } from './rateLimiter.middleware.js';
 export {
-  tlsMiddleware,
-  httpsRedirectMiddleware,
-  hstsMiddleware,
-  securityHeadersMiddleware,
-} from './tls.middleware.js';
-export {
+  clearProfileCache,
+  EmployeeNotFoundError,
+  preloadProfiles,
   resolveSlackProfile,
   resolveSlackProfileNoCache,
-  clearProfileCache,
-  preloadProfiles,
-  EmployeeNotFoundError,
 } from './slackProfile.resolver.js';
+export {
+  hstsMiddleware,
+  httpsRedirectMiddleware,
+  securityHeadersMiddleware,
+  tlsMiddleware,
+} from './tls.middleware.js';

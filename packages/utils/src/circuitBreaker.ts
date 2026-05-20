@@ -1,5 +1,5 @@
-import { env } from '@reaatech/agent-mesh';
 import type { CircuitBreakerState, CircuitState } from '@reaatech/agent-mesh';
+import { env } from '@reaatech/agent-mesh';
 
 class CircuitBreaker {
   private readonly state = new Map<string, CircuitBreakerState>();

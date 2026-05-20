@@ -1,5 +1,5 @@
-import { env } from '@reaatech/agent-mesh';
 import type { EmployeeProfile } from '@reaatech/agent-mesh';
+import { env } from '@reaatech/agent-mesh';
 import { logger } from '@reaatech/agent-mesh-observability';
 
 export class EmployeeNotFoundError extends Error {

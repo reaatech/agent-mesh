@@ -1,14 +1,14 @@
+export { initRegistry, loadRegistry, registryState, reloadRegistry } from './registry.loader.js';
 export {
-  AgentConfigSchema,
-  AgentRegistrySchema,
-  type AgentConfig,
-  type AgentRegistry,
-  type RegistryLoadResult,
-} from './types.js';
-export { registryState, loadRegistry, reloadRegistry, initRegistry } from './registry.loader.js';
-export {
+  cleanupSighupHandler,
+  isReloadPending,
   setupSighupHandler,
   triggerReload,
-  isReloadPending,
-  cleanupSighupHandler,
 } from './sighup.js';
+export {
+  type AgentConfig,
+  AgentConfigSchema,
+  type AgentRegistry,
+  AgentRegistrySchema,
+  type RegistryLoadResult,
+} from './types.js';

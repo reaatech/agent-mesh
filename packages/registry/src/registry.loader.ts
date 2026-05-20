@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises';
-import { MAX_YAML_FILE_SIZE } from '@reaatech/agent-mesh';
-import { env } from '@reaatech/agent-mesh';
+import { env, MAX_YAML_FILE_SIZE } from '@reaatech/agent-mesh';
 import { logger } from '@reaatech/agent-mesh-observability';
 import { glob } from 'glob';
 import { parse as parseYaml } from 'yaml';

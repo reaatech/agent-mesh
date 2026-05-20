@@ -1,8 +1,8 @@
+export { McpClient, mcpClientFactory } from './mcp.client.js';
 export {
-  dispatchToAgent,
   buildTurnEntry,
+  dispatchToAgent,
   formatAgentResponse,
-  shouldCloseSession,
   getUpdatedWorkflowState,
+  shouldCloseSession,
 } from './router.service.js';
-export { mcpClientFactory, McpClient } from './mcp.client.js';

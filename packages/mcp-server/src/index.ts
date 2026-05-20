@@ -1,8 +1,8 @@
-export { mcpMiddleware, handleMcpRequest, type McpMessage, type McpResponse } from './mcpServer.js';
+export { handleMcpRequest, type McpMessage, type McpResponse, mcpMiddleware } from './mcpServer.js';
 export {
-  sseHandler,
-  messageHandler,
-  sendToClient,
   closeSseConnection,
   getActiveConnectionCount,
+  messageHandler,
+  sendToClient,
+  sseHandler,
 } from './orchestrator.mcp.js';

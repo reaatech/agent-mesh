@@ -1,5 +1,4 @@
-import { SERVICE_NAME } from '@reaatech/agent-mesh';
-import { env } from '@reaatech/agent-mesh';
+import { env, SERVICE_NAME } from '@reaatech/agent-mesh';
 import winston from 'winston';
 
 const PII_PATTERNS = [
@@ -77,5 +76,5 @@ export function createChildLogger(context: Record<string, string>): winston.Logg
   return logger.child(context);
 }
 
-export { logger };
 export type { winston };
+export { logger };
