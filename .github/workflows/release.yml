@@ -18,7 +18,6 @@ jobs:
       contents: write
       pull-requests: write
       id-token: write
-      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -51,26 +50,10 @@ jobs:
           title: 'chore(release): version packages'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # setup-node's registry-url writes an .npmrc that authenticates via
+          # NODE_AUTH_TOKEN; without it the publish runs anonymously and npm
+          # returns E404 on PUT. NPM_TOKEN is kept for the changesets action's
+          # own .npmrc handling.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: 'true'
-
-      - name: Mirror published packages to GitHub Packages
-        if: steps.changesets.outputs.published == 'true'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISHED_PACKAGES: ${{ steps.changesets.outputs.publishedPackages }}
-        run: |
-          cat > .npmrc <<EOF
-          @reaatech:registry=https://npm.pkg.github.com
-          //npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
-          EOF
-          echo "$PUBLISHED_PACKAGES" | jq -r '.[].name' | while read -r name; do
-            suffix="${name#@reaatech/agent-mesh-}"
-            if [ "$suffix" = "$name" ]; then
-              dir="packages/core"
-            else
-              dir="packages/$suffix"
-            fi
-            echo "Mirroring $name -> $dir"
-            (cd "$dir" && npm publish --registry=https://npm.pkg.github.com)
-          done
