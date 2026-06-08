@@ -188,8 +188,8 @@ importers:
   packages/gateway:
     dependencies:
       '@google-cloud/secret-manager':
-        specifier: ^6.0.0
-        version: 6.1.2
+        specifier: ^6.1.3
+        version: 6.1.3
       '@reaatech/agent-mesh':
         specifier: workspace:*
         version: link:../core
@@ -755,8 +755,8 @@ packages:
     resolution: {integrity: sha512-xXAQBVVrFviWz8L8yDKEqv1ziVw/gMSpYHt3IxSYRSY0fTyjis+xOrKJILj8dd8PAUHGnGiAIYuTprflkE9jsQ==}
     engines: {node: '>=18'}
 
-  '@google-cloud/secret-manager@6.1.2':
-    resolution: {integrity: sha512-X4GiHC1OsZU8LOcnM/hk7Q+W/orZLSJz6IAvBJrjaQCj1pSRHkTHJnU87A6E5G8/ubIJjL6vs1GJ8f17TkDzPw==}
+  '@google-cloud/secret-manager@6.1.3':
+    resolution: {integrity: sha512-3e/5GLusy1sWBEUvIlJbJpaaUlaf4MeeGQDUBdIVCqWYnn0lNPtbO6ZbJhTPiOkct2yxi8DXWgzWDbCJdDq9Bw==}
     engines: {node: '>=18'}
 
   '@google-cloud/vertexai@1.12.0':
@@ -3424,9 +3424,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@google-cloud/secret-manager@6.1.2':
+  '@google-cloud/secret-manager@6.1.3':
     dependencies:
-      google-gax: 5.0.6
+      google-gax: 5.0.7
     transitivePeerDependencies:
       - supports-color
 
