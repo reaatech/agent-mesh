@@ -31,7 +31,7 @@
     "@reaatech/agent-mesh": "workspace:*",
     "@reaatech/agent-mesh-observability": "workspace:*",
     "@google-cloud/firestore": "^8.5.0",
-    "@google-cloud/pubsub": "^5.3.0",
+    "@google-cloud/pubsub": "^5.3.1",
     "express": "^5.0.0"
   },
   "devDependencies": {
