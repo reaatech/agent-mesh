@@ -1,4 +1,10 @@
-export { ClassifierService, classifierService, isRateLimitError } from './classifier.service.js';
+export type { ClassifierProvider } from './classifier.provider.js';
+export {
+  ClassifierService,
+  classifierService,
+  createClassifier,
+  isRateLimitError,
+} from './classifier.service.js';
 export {
   detectLanguage,
   FALLBACK_QUESTIONS,

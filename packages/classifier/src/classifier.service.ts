@@ -2,6 +2,7 @@ import type { ClassifierOutput } from '@reaatech/agent-mesh';
 import { env } from '@reaatech/agent-mesh';
 import { logger } from '@reaatech/agent-mesh-observability';
 import type { AgentRegistry } from '@reaatech/agent-mesh-registry';
+import type { ClassifierProvider } from './classifier.provider.js';
 import { detectLanguage } from './localization.js';
 import { buildClassifierPrompt, parseClassifierOutput } from './prompt.builder.js';
 
@@ -35,7 +36,7 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-class MockClassifier {
+class MockClassifier implements ClassifierProvider {
   classify(userInput: string, registry: AgentRegistry): ClassifierOutput {
     const input = userInput.toLowerCase();
     const detectedLanguage = detectLanguage(userInput);
@@ -77,7 +78,7 @@ class MockClassifier {
   }
 }
 
-class GeminiClassifier {
+class GeminiClassifier implements ClassifierProvider {
   private model: unknown = null;
   private initialized = false;
 
@@ -165,20 +166,30 @@ class GeminiClassifier {
 }
 
 export class ClassifierService {
-  private geminiClassifier: GeminiClassifier | null = null;
+  private primary: ClassifierProvider | null = null;
   private mockClassifier: MockClassifier;
   private useMock = false;
 
-  constructor() {
+  /**
+   * @param provider Optional classifier used in place of the built-in Gemini
+   *   classifier. When omitted, behaviour is unchanged: Gemini in normal runs
+   *   (with a mock fallback on failure), mock under `NODE_ENV=test`. When
+   *   provided, the injected classifier is the primary and the mock remains the
+   *   on-error fallback — and it is used regardless of `NODE_ENV` (so it is
+   *   testable).
+   */
+  constructor(provider?: ClassifierProvider) {
     this.mockClassifier = new MockClassifier();
 
-    if (env.NODE_ENV !== 'test') {
+    if (provider) {
+      this.primary = provider;
+    } else if (env.NODE_ENV !== 'test') {
       const gemini = new GeminiClassifier();
       gemini.init().catch(() => {
         logger.info('Using mock classifier (Gemini unavailable)');
         this.useMock = true;
       });
-      this.geminiClassifier = gemini;
+      this.primary = gemini;
     } else {
       this.useMock = true;
     }
@@ -190,11 +201,11 @@ export class ClassifierService {
     priorLanguage?: string,
   ): Promise<ClassifierOutput> {
     try {
-      if (this.useMock || !this.geminiClassifier) {
+      if (this.useMock || !this.primary) {
         return this.mockClassifier.classify(userInput, registry);
       }
 
-      return await this.geminiClassifier.classify(userInput, registry, priorLanguage);
+      return await this.primary.classify(userInput, registry, priorLanguage);
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'unknown';
       logger.warn('Classifier falling back to mock', { error: msg });
@@ -206,6 +217,14 @@ export class ClassifierService {
   isMock(): boolean {
     return this.useMock;
   }
+}
+
+/**
+ * Create a {@link ClassifierService}, optionally backed by a custom
+ * {@link ClassifierProvider}. Equivalent to `new ClassifierService(provider)`.
+ */
+export function createClassifier(provider?: ClassifierProvider): ClassifierService {
+  return new ClassifierService(provider);
 }
 
 export const classifierService = new ClassifierService();
