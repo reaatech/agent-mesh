@@ -1,6 +1,6 @@
 {
   "name": "@reaatech/agent-mesh-utils",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "description": "Circuit breaker and utility modules for agent-mesh",
   "license": "MIT",

@@ -1,6 +1,6 @@
 {
   "name": "@reaatech/agent-mesh-confidence",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Confidence gate and clarification for agent-mesh routing",
   "license": "MIT",
