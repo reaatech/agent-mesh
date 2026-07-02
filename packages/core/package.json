@@ -1,6 +1,6 @@
 {
   "name": "@reaatech/agent-mesh",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "description": "Core domain types and configuration for agent-mesh",
   "license": "MIT",

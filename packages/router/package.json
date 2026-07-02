@@ -1,6 +1,6 @@
 {
   "name": "@reaatech/agent-mesh-router",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "MCP-based agent routing and dispatch for agent-mesh",
   "license": "MIT",
