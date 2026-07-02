@@ -1,5 +1,8 @@
 # @reaatech/agent-mesh-utils
 
+> **Pluggable breaker persistence** via `BreakerStore` + `setBreakerStore` —
+> Firestore by default, plus `InMemoryBreakerStore` and the Postgres/Redis adapters.
+
 [![npm version](https://img.shields.io/npm/v/@reaatech/agent-mesh-utils.svg)](https://www.npmjs.com/package/@reaatech/agent-mesh-utils)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/reaatech/agent-mesh/blob/main/LICENSE)
 [![CI](https://img.shields.io/github/actions/workflow/status/reaatech/agent-mesh/ci.yml?branch=main&label=CI)](https://github.com/reaatech/agent-mesh/actions/workflows/ci.yml)

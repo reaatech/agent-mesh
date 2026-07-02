@@ -46,6 +46,11 @@ export class McpClient {
     }
 
     if (this.connectionPool.length < MAX_POOL_SIZE) {
+      if (!this.agent.endpoint) {
+        throw new Error(
+          `Agent ${this.agent.agent_id} has no endpoint (mcp transport requires one)`,
+        );
+      }
       const transport = new StreamableHTTPClientTransport(new URL(this.agent.endpoint));
       const client = new Client({
         name: 'agent-mesh-orchestrator',

@@ -10,10 +10,10 @@ This monorepo provides the full orchestrator stack for building multi-agent AI s
 
 ## Features
 
-- **Confidence-gated routing** — Gemini Flash intent classification with a 5-rule decision tree (route / clarify / fallback) and per-agent confidence thresholds
-- **MCP agent dispatch** — StreamableHTTP transport with connection pooling, retries, and Zod-validated responses
-- **Per-agent circuit breakers** — Three-state (CLOSED/OPEN/HALF_OPEN) with exponential backoff, Firestore persistence, and cross-instance leader election
-- **Session management** — Firestore-backed multi-turn sessions with sliding TTL, turn history, workflow state passthrough, and classification bypass
+- **Confidence-gated routing** — a 5-rule decision tree (route / clarify / fallback) with per-agent confidence thresholds. **Pluggable classifier** (`ClassifierProvider`): Gemini Flash by default, or inject any model — including a host-resolved one.
+- **Agent dispatch** — StreamableHTTP MCP transport (connection pooling, retries, Zod-validated responses) **or an in-process transport** (`type: 'inprocess'`) for agents co-located with the orchestrator, with a `metadata` passthrough for host context (e.g. a tenant `orgId`).
+- **Per-agent circuit breakers** — Three-state (CLOSED/OPEN/HALF_OPEN) with exponential backoff and cross-instance leader election. **Pluggable persistence** (`BreakerStore`): Firestore by default, or Postgres/Redis.
+- **Session management** — multi-turn sessions with sliding TTL, turn history, workflow-state passthrough, and classification bypass. **Pluggable persistence** (`SessionStore`): Firestore by default, or Postgres/Redis/in-memory.
 - **Hot-reload agent registry** — YAML-based agent configuration with `${ENV_VAR}` expansion, SIGHUP reload, SSRF-safe URL validation, and cross-agent invariant enforcement
 - **Express gateway** — API key authentication (Secret Manager-backed), token bucket rate limiting, TLS enforcement with HSTS, and Slack profile resolution
 - **MCP server interface** — Exposes the orchestrator as an MCP-compliant agent with JSON-RPC 2.0 routing, tool registration, and SSE transport
@@ -119,13 +119,15 @@ See the [`examples/orchestrator/`](./examples/orchestrator/) directory for the c
 | ------- | ----------- |
 | [`@reaatech/agent-mesh`](./packages/core) | Core domain types, Zod schemas, environment config, and shared constants |
 | [`@reaatech/agent-mesh-registry`](./packages/registry) | Agent YAML loader, SIGHUP hot-reload, SSRF-safe URL validation |
-| [`@reaatech/agent-mesh-session`](./packages/session) | Firestore-backed multi-turn session management |
-| [`@reaatech/agent-mesh-classifier`](./packages/classifier) | Gemini Flash intent classification with mock fallback |
+| [`@reaatech/agent-mesh-session`](./packages/session) | Multi-turn session management with a pluggable `SessionStore` (Firestore default + in-memory) |
+| [`@reaatech/agent-mesh-classifier`](./packages/classifier) | Intent classification with a pluggable `ClassifierProvider` (Gemini Flash default + mock) |
 | [`@reaatech/agent-mesh-confidence`](./packages/confidence) | Confidence-gated routing decision tree and clarification cache |
-| [`@reaatech/agent-mesh-router`](./packages/router) | MCP-based agent dispatch with connection pooling |
+| [`@reaatech/agent-mesh-router`](./packages/router) | Agent dispatch — MCP (pooled) or in-process transport |
 | [`@reaatech/agent-mesh-gateway`](./packages/gateway) | Express middleware (auth, rate limiting, TLS) and request handler |
 | [`@reaatech/agent-mesh-mcp-server`](./packages/mcp-server) | MCP server exposing orchestrator with JSON-RPC 2.0 and SSE transport |
-| [`@reaatech/agent-mesh-utils`](./packages/utils) | Per-agent circuit breaker with Firestore persistence and leader election |
+| [`@reaatech/agent-mesh-utils`](./packages/utils) | Per-agent circuit breaker with a pluggable `BreakerStore` (Firestore default) + leader election |
+| [`@reaatech/agent-mesh-postgres`](./packages/postgres) | Postgres-backed `SessionStore` + `BreakerStore` adapters |
+| [`@reaatech/agent-mesh-redis`](./packages/redis) | Redis-backed `SessionStore` + `BreakerStore` adapters |
 | [`@reaatech/agent-mesh-observability`](./packages/observability) | Structured logging, OpenTelemetry tracing/metrics, and audit events |
 
 ## Documentation
