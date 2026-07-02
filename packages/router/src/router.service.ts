@@ -10,6 +10,7 @@ import {
 } from '@reaatech/agent-mesh-observability';
 import type { AgentConfig } from '@reaatech/agent-mesh-registry';
 import { circuitBreaker } from '@reaatech/agent-mesh-utils';
+import { dispatchInProcess } from './inprocess.transport.js';
 import { mcpClientFactory } from './mcp.client.js';
 
 export async function dispatchToAgent(
@@ -24,6 +25,7 @@ export async function dispatchToAgent(
     detectedLanguage: string;
     turnHistory: TurnEntry[];
     workflowState: Record<string, unknown>;
+    metadata?: Record<string, unknown>;
   },
 ): Promise<AgentResponse> {
   const start = Date.now();
@@ -45,12 +47,15 @@ export async function dispatchToAgent(
     detected_language: input.detectedLanguage,
     turn_history: input.turnHistory,
     workflow_state: input.workflowState,
+    metadata: input.metadata,
   };
 
-  const client = mcpClientFactory.getClient(agent);
-
   try {
-    const response = await client.sendMessage(context);
+    // Route by transport: in-process handler (no HTTP hop) vs pooled MCP client.
+    const response =
+      agent.type === 'inprocess'
+        ? await dispatchInProcess(agent, context)
+        : await mcpClientFactory.getClient(agent).sendMessage(context);
     if (env.ENABLE_CIRCUIT_BREAKER) {
       circuitBreaker.recordSuccess(agent.agent_id);
     }
