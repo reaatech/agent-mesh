@@ -1,6 +1,6 @@
 {
   "name": "@reaatech/agent-mesh-registry",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "description": "Agent registry loader with SIGHUP hot-reload for agent-mesh",
   "license": "MIT",

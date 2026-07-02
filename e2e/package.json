@@ -1,6 +1,6 @@
 {
   "name": "@reaatech/agent-mesh-e2e",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "type": "module",
   "description": "End-to-end tests for agent-mesh",
