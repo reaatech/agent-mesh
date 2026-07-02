@@ -1,0 +1,51 @@
+{
+  "name": "@reaatech/agent-mesh-redis",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Redis-backed SessionStore and BreakerStore adapters for agent-mesh",
+  "license": "MIT",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "ioredis": ">=5"
+  },
+  "dependencies": {
+    "@reaatech/agent-mesh": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "ioredis": "^5.4.1",
+    "tsup": "^8.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reaatech/agent-mesh.git",
+    "directory": "packages/redis"
+  },
+  "author": "Rick Somers <rick@reaatech.com> (https://reaatech.com)",
+  "homepage": "https://github.com/reaatech/agent-mesh/tree/main/packages/redis#readme",
+  "bugs": {
+    "url": "https://github.com/reaatech/agent-mesh/issues"
+  }
+}
