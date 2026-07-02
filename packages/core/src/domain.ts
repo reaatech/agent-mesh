@@ -9,6 +9,9 @@ export const IncomingRequestSchema = z.object({
   locale: z.string().optional(),
   user_id: z.string().optional(),
   slack_user_id: z.string().optional(),
+  // Host-defined passthrough (e.g. multi-tenant `orgId`). agent-mesh does not
+  // interpret it; it rides through ContextPacket/SessionRecord to the agent.
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 export type IncomingRequest = z.infer<typeof IncomingRequestSchema>;
@@ -70,6 +73,7 @@ export const ContextPacketSchema = z.object({
     )
     .default([]),
   workflow_state: z.record(z.string(), z.unknown()).default({}),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 export type ContextPacket = z.infer<typeof ContextPacketSchema>;
@@ -115,6 +119,7 @@ export const SessionRecordSchema = z.object({
   workflow_state: z.record(z.string(), z.unknown()).default({}),
   created_at: z.string().datetime(),
   updated_at: z.string().datetime(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
   ttl: z.date(),
 });
 

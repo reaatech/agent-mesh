@@ -24,6 +24,7 @@ function mapSessionSnapshot(id: string, data: Record<string, unknown>): SessionR
     workflow_state: (data.workflow_state as Record<string, unknown> | undefined) ?? {},
     created_at: String(data.created_at ?? new Date().toISOString()),
     updated_at: String(data.updated_at ?? new Date().toISOString()),
+    metadata: data.metadata as Record<string, unknown> | undefined,
     ttl,
   };
 }
