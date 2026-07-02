@@ -9,3 +9,11 @@ export {
   resumeSession,
   updateWorkflowState,
 } from './session.service.js';
+export {
+  FirestoreSessionStore,
+  getSessionStore,
+  InMemorySessionStore,
+  resetSessionStore,
+  type SessionStore,
+  setSessionStore,
+} from './session.store.js';
