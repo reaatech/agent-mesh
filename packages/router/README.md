@@ -1,5 +1,9 @@
 # @reaatech/agent-mesh-router
 
+> Dispatch over **MCP** *or* **in-process** (`type: 'inprocess'`, via
+> `registerInProcessAgent`). A `metadata` passthrough carries host context (e.g. a
+> tenant `orgId`) into the `ContextPacket`.
+
 [![npm version](https://img.shields.io/npm/v/@reaatech/agent-mesh-router.svg)](https://www.npmjs.com/package/@reaatech/agent-mesh-router)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/reaatech/agent-mesh/blob/main/LICENSE)
 [![CI](https://github.com/reaatech/agent-mesh/actions/workflows/ci.yml/badge.svg)](https://github.com/reaatech/agent-mesh/actions/workflows/ci.yml)

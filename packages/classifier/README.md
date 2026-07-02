@@ -1,5 +1,8 @@
 # @reaatech/agent-mesh-classifier
 
+> **Pluggable** via `ClassifierProvider` — inject any intent classifier with
+> `createClassifier(provider)`. Default (no arg) = Gemini Flash + mock fallback.
+
 [![npm version](https://img.shields.io/npm/v/@reaatech/agent-mesh-classifier.svg)](https://www.npmjs.com/package/@reaatech/agent-mesh-classifier)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/reaatech/agent-mesh/blob/main/LICENSE)
 [![CI](https://github.com/reaatech/agent-mesh/actions/workflows/ci.yml/badge.svg)](https://github.com/reaatech/agent-mesh/actions/workflows/ci.yml)

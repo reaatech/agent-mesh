@@ -107,9 +107,15 @@ tsup (dual CJS/ESM build) + Biome (lint/format) + Vitest (testing).
 
 ### 1. Stateless by Design
 - No in-memory state shared across requests
-- All session state persisted to Firestore
-- Circuit breaker state persisted with leader election
+- All session state persisted via a pluggable `SessionStore` (Firestore default; Postgres/Redis/in-memory adapters)
+- Circuit breaker state persisted via a pluggable `BreakerStore` with leader election (Firestore default; Postgres/Redis)
 - Enables horizontal scaling on Cloud Run / Kubernetes
+
+### 1b. Pluggable Providers
+- **Classifier** — `ClassifierProvider` (Gemini default; inject any model, incl. a host-resolved one). No hard dependency on a specific model vendor.
+- **Persistence** — `SessionStore` / `BreakerStore` interfaces; Firestore is the default impl, Postgres/Redis/in-memory are drop-in.
+- **Transport** — agents dispatch over MCP (`type: 'mcp'`) or **in-process** (`type: 'inprocess'`) for co-located handlers, with a `metadata` passthrough for host context.
+- Defaults are unchanged for existing deployments — every provider is opt-in via injection.
 
 ### 2. Zero-Trust Security
 - All inputs validated with Zod schemas

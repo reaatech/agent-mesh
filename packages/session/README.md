@@ -1,5 +1,8 @@
 # @reaatech/agent-mesh-session
 
+> **Pluggable persistence** via `SessionStore` + `setSessionStore` — Firestore by
+> default, plus `InMemorySessionStore` and the Postgres/Redis adapter packages.
+
 [![npm version](https://img.shields.io/npm/v/@reaatech/agent-mesh-session.svg)](https://www.npmjs.com/package/@reaatech/agent-mesh-session)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/reaatech/agent-mesh/blob/main/LICENSE)
 [![CI](https://github.com/reaatech/agent-mesh/actions/workflows/ci.yml/badge.svg)](https://github.com/reaatech/agent-mesh/actions/workflows/ci.yml)
