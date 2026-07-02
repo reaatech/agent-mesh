@@ -1,5 +1,12 @@
 # @reaatech/agent-mesh-observability
 
+## 1.0.2
+
+### Patch Changes
+
+- Updated dependencies [[`420c0f8`](https://github.com/reaatech/agent-mesh/commit/420c0f8be17446810124a4fb4073e455a6a4c900)]:
+  - @reaatech/agent-mesh@1.2.0
+
 ## 1.0.1
 
 ### Patch Changes

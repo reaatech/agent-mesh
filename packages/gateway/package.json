@@ -1,6 +1,6 @@
 {
   "name": "@reaatech/agent-mesh-gateway",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "description": "HTTP gateway for agent-mesh (auth, rate limiting, TLS, entry handler)",
   "license": "MIT",

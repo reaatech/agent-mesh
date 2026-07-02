@@ -1,6 +1,6 @@
 {
   "name": "@reaatech/agent-mesh-redis",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "description": "Redis-backed SessionStore and BreakerStore adapters for agent-mesh",
   "license": "MIT",
