@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "tsup": "^8.4.0",
-    "@types/node": "^25.6.0"
+    "@types/node": "^26.1.0"
   },
   "author": "Rick Somers <rick@reaatech.com> (https://reaatech.com)",
   "homepage": "https://github.com/reaatech/agent-mesh/tree/main/packages/utils#readme",
