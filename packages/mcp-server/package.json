@@ -39,7 +39,7 @@
   "devDependencies": {
     "@types/express": "^5.0.0",
     "tsup": "^8.4.0",
-    "@types/node": "^26.1.0"
+    "@types/node": "^26.1.1"
   },
   "repository": {
     "type": "git",

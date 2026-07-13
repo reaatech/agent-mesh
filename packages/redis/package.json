@@ -34,7 +34,7 @@
     "@reaatech/agent-mesh": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^26.1.0",
+    "@types/node": "^26.1.1",
     "ioredis": "^5.4.1",
     "tsup": "^8.4.0"
   },
