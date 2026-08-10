@@ -31,7 +31,7 @@
     "@reaatech/agent-mesh": "workspace:*",
     "@reaatech/agent-mesh-observability": "workspace:*",
     "@reaatech/agent-mesh-registry": "workspace:*",
-    "@google-cloud/aiplatform": "^6.8.1",
+    "@google-cloud/aiplatform": "^7.0.0",
     "@google-cloud/vertexai": "^1.0.0"
   },
   "repository": {
