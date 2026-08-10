@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@types/node": "^26.1.0",
-    "@types/pg": "^8.11.10",
+    "@types/pg": "^8.20.4",
     "pg": "^8.13.1",
     "tsup": "^8.4.0"
   },
