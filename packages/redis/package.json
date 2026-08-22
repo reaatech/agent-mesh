@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@types/node": "^26.1.0",
-    "ioredis": "^5.4.1",
+    "ioredis": "^6.0.0",
     "tsup": "^8.4.0"
   },
   "repository": {
